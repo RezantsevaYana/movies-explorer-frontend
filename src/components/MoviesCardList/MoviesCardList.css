@@ -1,0 +1,38 @@
+.movies-list {
+    width: 100%;
+    border-top: 1px #E8E8E8 solid;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: auto;
+    row-gap: 30px;
+    column-gap: 24px;
+    padding-top: 70px;
+    padding-bottom: 30px;
+}
+
+@media screen and (max-width:1135px) {
+    .movies-list {
+        grid-template-columns: repeat(2, auto);
+        grid-template-rows: auto;
+        row-gap: 36px;
+        column-gap: 30px;
+    }
+}
+
+@media screen and (max-width:670px) {
+    .movies-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width:340px) {
+    .movies-list {
+        grid-template-columns: repeat(1, auto);
+        grid-template-rows: auto;
+        align-self: center;
+        row-gap: 16px;
+    }
+}

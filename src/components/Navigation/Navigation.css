@@ -1,0 +1,65 @@
+.account__link {
+    display: flex;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    text-decoration: none;
+    color: black;
+    width: min-content;
+    border: 2px solid #AAAAAA;
+    box-sizing: border-box;
+    border-radius: 50px;
+    padding: 9px 12px;
+}
+
+.account__logo {
+    background-image: url(../../images/account-logo.svg);
+    width: 12px;
+    height: 14px;
+    margin-right: 7px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.account__link:hover {
+    cursor: pointer;
+    transition-duration: .3s;
+    opacity: 0.6;
+}
+
+.header__link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.header__movies {
+    margin-right: 18px; 
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #000000;
+}
+
+.header__movies:hover {
+    cursor: pointer;
+    transition-duration: .3s;
+    opacity: 0.6;
+}
+
+.header__saved-movies {
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #000000;
+}
+
+.header__saved-movies:hover {
+    cursor: pointer;
+    transition-duration: .3s;
+    opacity: 0.6;
+}
