@@ -1,3 +1,11 @@
+.navigation {
+    display: flex;
+    flex-direction: row;
+    width: 676px;
+    justify-content: space-between;
+}
+
+
 .account__link {
     display: flex;
     font-style: normal;
@@ -62,4 +70,40 @@
     cursor: pointer;
     transition-duration: .3s;
     opacity: 0.6;
+}
+
+.mobile-header__button {
+    display: none;
+}
+
+
+@media screen and (max-width:1200px) {
+    .navigation {
+        width: 60%;
+    }
+
+}
+
+@media screen and (max-width:1000px) {
+    .navigation {
+        display: none;
+    }
+
+    .mobile-header__button {
+        display: flex;
+        background-image: url(../../images/header-popup.svg);
+        height: 44px;
+        width: 44px;
+        background-color: white;
+        border: 0;
+        padding: 0;
+    }
+    
+    .mobile-header__button:hover {
+        cursor: pointer;
+        transition-duration: .3s;
+        opacity: 0.6;
+    }
+    
+    
 }

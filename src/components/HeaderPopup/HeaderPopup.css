@@ -1,0 +1,96 @@
+.popup {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s linear;
+}
+
+.popup__container {
+    background: #FFFFFF;
+    opacity: 1;
+    width: 68%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.popup_opened {
+    display: flex;
+    visibility: visible;
+    opacity: 1;
+}
+
+.popup__close {
+    background: transparent center url(../../images/close.svg);
+    width: 22px;
+    height: 22px;
+    background-size: cover;
+    border: none;
+    position: absolute;
+    top: 22.44px;
+    right: 22.44px;
+    padding: 0;
+}
+
+.popup__close:hover {
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.header__mobile-list {
+    list-style: none;
+    margin-top: 159px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header__mobile {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    text-decoration: none;
+    color: black;
+}
+
+.header__mobile-item {
+    margin-bottom: 28px;
+}
+
+.header__mobile-item:last-of-type {
+    margin-bottom: 0;
+}
+
+.header__mobile:hover {
+    border-bottom: 2px black solid;
+    cursor: pointer;
+}
+
+
+.account__link_mobile {
+    margin-bottom: 90px;
+}
+
+@media screen and (max-width:390px) {
+    .popup__container {
+        width: 100%;
+    }
+
+
+}
+
+

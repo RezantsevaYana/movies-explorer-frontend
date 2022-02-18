@@ -27,8 +27,9 @@
     line-height: 20px;
     border: none;
     background-color: #F9F9F9;
-    color:rgba(160, 160, 160, 1);
+    color: black;
     cursor: pointer;
+    outline: none;
 }
 
 .search__logo {

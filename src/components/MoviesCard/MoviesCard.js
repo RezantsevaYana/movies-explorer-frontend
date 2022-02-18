@@ -1,4 +1,5 @@
 import React from "react";
+import { Navlink } from "react-router-dom"
 
 function MoviesCard(props) {
     return (
@@ -9,7 +10,7 @@ function MoviesCard(props) {
                     <p className="movies-card__length">1ч 47м</p>
                 </div>
                 <button className="movies-card__save">
-                    <div className="movies-card__save-img"/>
+                    <div className={`movies-card__save-img`}/>
                 </button>
             </figcaption>
             <a className="movies-card__link">

@@ -1,14 +1,13 @@
 import React from 'react';
 import { Routes, Route } from "react-router-dom";
-import Footer from '../Footer/Footer.js';
-import Header from '../Header/Header.js';
-import Promo from '../Promo/Promo.js';
-import AboutProject from "../AboutProject/AboutProject.js"
-import Techs from '../Techs/Techs.js';
-import AboutMe from '../AboutMe/AboutMe.js';
-import Portfolio from '../Portfolio/Portfolio.js';
-import AccountButton from '../Navigation/Navigation.js';
 import Movies from '../Movies/Movies.js';
+import HeaderPopup from '../HeaderPopup/HeaderPopup.js';
+import SavedMovies from '../SavedMovies/SavedMovies.js';
+import NotFound from '../NotFound/NotFound.js';
+import Profile from '../Profile/Profile.js';
+import Login from '../Login/Login.js';
+import Register from '../Register/Register.js';
+import Main from '../Main/Main.js';
 
 
 function App() {
@@ -16,50 +15,39 @@ function App() {
     <div className="App">
       <Routes>
         <Route path='/movies' element={
-          <>
-            <Header 
-            title = "Фильмы"
-            subtitle = "Сохраненные фильмы"
-            logIn = ""
-            titleButton = ""
-            />
-            <Movies></Movies>
-            <Footer></Footer>
-          </>
+          <Movies />
         }></Route>
-      
         <Route path="/" element={
-          <>
-            <Header 
-              title = ""
-              subtitle = ""
-              logIn = "Регистрация"
-              titleButton = "Войти"
-            />
-            <Promo></Promo>
-            <AboutProject></AboutProject>
-            <Techs></Techs>
-            <AboutMe></AboutMe>
-            <Portfolio></Portfolio>
-            <Footer></Footer>
-          </>
-            }></Route>
+            <Main />
+            }>
+        </Route>
         <Route path="/saved-movies" element={
-          <>
-            <Header 
-            title = "Фильмы"
-            subtitle = "Сохраненные фильмы"
-            logIn = ""
-            titleButton = "Аккаунт"
-            />
-            <Footer></Footer>
-          </>
+            <SavedMovies />
         }>
         </Route>
-        <Route path="/profile"></Route>
-        <Route path="/signin"></Route>
-        <Route path="/signup"></Route>
+        <Route path="/profile" element={
+          <Profile
+          name='Яна'
+          ></Profile>
+        }>
+        </Route>
+        <Route path="/signin" element={
+          <Login
+          title="Рады видеть!"></Login>
+        }></Route>
+        <Route path="/signup" element={
+          <Register
+          title="Добро пожаловать!"
+          ></Register>
+        }></Route>
+        <Route path="*" element={
+          <NotFound></NotFound>
+        }
+        ></Route>
       </Routes>
+
+      <HeaderPopup />
+
       
     </div>
   );
@@ -67,4 +55,9 @@ function App() {
 
 export default App;
 
-// стилизовать navtab
+
+// отображение скрытых блоков - попап
+// список сохраненных фильмов
+// кнопки
+
+
