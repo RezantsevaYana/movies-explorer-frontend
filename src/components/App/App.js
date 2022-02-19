@@ -8,21 +8,40 @@ import Profile from '../Profile/Profile.js';
 import Login from '../Login/Login.js';
 import Register from '../Register/Register.js';
 import Main from '../Main/Main.js';
+import Footer from '../Footer/Footer.js';
 
 
 function App() {
+
+  const [isPopupOpen, setIsPopupOpen] = React.useState(false);
+ 
+    function onHeaderOpen() {
+        setIsPopupOpen(true)
+    }
+
+    function closeAllPopups() {
+      setIsPopupOpen(false)
+    }
+
   return (
     <div className="App">
       <Routes>
         <Route path='/movies' element={
-          <Movies />
+          <Movies
+          onHeaderOpen={onHeaderOpen}
+          />
         }></Route>
         <Route path="/" element={
             <Main />
             }>
         </Route>
         <Route path="/saved-movies" element={
-            <SavedMovies />
+          <>
+            <SavedMovies
+            onHeaderOpen={onHeaderOpen}
+            />
+            <Footer></Footer>
+          </>
         }>
         </Route>
         <Route path="/profile" element={
@@ -46,7 +65,7 @@ function App() {
         ></Route>
       </Routes>
 
-      <HeaderPopup />
+      <HeaderPopup isOpen={isPopupOpen} onClose={closeAllPopups} />
 
       
     </div>
@@ -54,10 +73,5 @@ function App() {
 }
 
 export default App;
-
-
-// отображение скрытых блоков - попап
-// список сохраненных фильмов
-// кнопки
 
 

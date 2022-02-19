@@ -10,11 +10,11 @@ import film2 from "../../images/film2.jpg"
 import film3 from "../../images/film3.jpg";
 import film4 from "../../images/film4.jpg";
 
-function SavedMovies(props) {
+function SavedMovies({onHeaderOpen}) {
     return (
-        <section className="movies">
+        <section className="movies movies_saved">
             <Header>
-                <Navigation/>
+                <Navigation onHeaderOpen={onHeaderOpen}/>
             </Header>
             <SearchForm></SearchForm>
             <MoviesCardList>
@@ -23,7 +23,6 @@ function SavedMovies(props) {
                 <MoviesCard film={film3}></MoviesCard>
                 <MoviesCard film={film4}></MoviesCard>
             </MoviesCardList>
-            <Footer></Footer>
         </section>
 
 

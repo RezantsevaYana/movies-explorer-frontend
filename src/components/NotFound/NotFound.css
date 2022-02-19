@@ -43,9 +43,10 @@
     background-color: white;
     padding: 0;
     margin-bottom: 60px;
+    color: black;
 }
 
-.not-found__button {
+.not-found__button:hover {
     cursor: pointer;
     transition-duration: .3s;
     opacity: 0.6;

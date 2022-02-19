@@ -15,7 +15,7 @@ function Navigation(props) {
                 Aккаунт
             </Link>
         </div>
-        <button className="mobile-header__button">
+        <button className="mobile-header__button" onClick={props.onHeaderOpen}>
         </button>
         </>
     );

@@ -19,11 +19,11 @@ import film10 from "../../images/film10.jpg";
 import film11 from "../../images/film11.jpg";
 import film12 from "../../images/film12.jpg";
 
-function Movies(props) {
+function Movies({onHeaderOpen}) {
     return (
         <section className="movies">
             <Header>
-                <Navigation></Navigation>
+                <Navigation onHeaderOpen={onHeaderOpen}></Navigation>
             </Header>
             <SearchForm></SearchForm>
             <MoviesCardList>
