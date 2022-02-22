@@ -18,10 +18,22 @@ function SavedMovies({onHeaderOpen}) {
             </Header>
             <SearchForm></SearchForm>
             <MoviesCardList>
-                <MoviesCard film={film1}></MoviesCard>
-                <MoviesCard film={film2}></MoviesCard>
-                <MoviesCard film={film3}></MoviesCard>
-                <MoviesCard film={film4}></MoviesCard>
+                <MoviesCard film={film1}>
+                    <button className="movies-card__button movies-card__button_delete" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film2}>
+                    <button className="movies-card__button movies-card__button_delete" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film3}>
+                    <button className="movies-card__button movies-card__button_delete" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film4}>
+                    <button className="movies-card__button movies-card__button_delete" type="button">
+                    </button>
+                </MoviesCard>
             </MoviesCardList>
         </section>
 

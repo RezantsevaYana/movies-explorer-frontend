@@ -66,12 +66,9 @@ function App() {
       </Routes>
 
       <HeaderPopup isOpen={isPopupOpen} onClose={closeAllPopups} />
-
-      
     </div>
   );
 }
 
 export default App;
-
 

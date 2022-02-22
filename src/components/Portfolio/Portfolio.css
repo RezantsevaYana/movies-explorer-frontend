@@ -89,6 +89,7 @@
 @media screen and (max-width:685px) {
     .portfolio {
         width: 87%;
+        margin-top: 70px;
     }
 }
 

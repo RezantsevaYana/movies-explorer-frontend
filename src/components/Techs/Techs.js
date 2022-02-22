@@ -3,7 +3,7 @@ import React from "react";
 function Techs(props) {
     return (
         <article className="techs" id="techs">
-            <div className="title__container title__container_techs">
+            <div className="title__container-techs">
                 <p className="title">
                     Технологии
                 </p>

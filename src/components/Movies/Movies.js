@@ -27,18 +27,54 @@ function Movies({onHeaderOpen}) {
             </Header>
             <SearchForm></SearchForm>
             <MoviesCardList>
-                <MoviesCard film={film1}></MoviesCard>
-                <MoviesCard film={film2}></MoviesCard>
-                <MoviesCard film={film3}></MoviesCard>
-                <MoviesCard film={film4}></MoviesCard>
-                <MoviesCard film={film5}></MoviesCard>
-                <MoviesCard film={film6}></MoviesCard>
-                <MoviesCard film={film7}></MoviesCard>
-                <MoviesCard film={film8}></MoviesCard>
-                <MoviesCard film={film9}></MoviesCard>
-                <MoviesCard film={film10}></MoviesCard>
-                <MoviesCard film={film11}></MoviesCard>
-                <MoviesCard film={film12}></MoviesCard>
+                <MoviesCard film={film1}>
+                    <button className="movies-card__button movies-card__button_save movies-card__button_save_active" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film2}>
+                    <button className="movies-card__button movies-card__button_save" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film3}>
+                    <button className="movies-card__button movies-card__button_save" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film4}>
+                    <button className="movies-card__button movies-card__button_save" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film5}>
+                    <button className="movies-card__button movies-card__button_save movies-card__button_save_active" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film6}>
+                    <button className="movies-card__button movies-card__button_save" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film7}>
+                    <button className="movies-card__button movies-card__button_save" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film8}>
+                    <button className="movies-card__button movies-card__button_save movies-card__button_save_active" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film9}>
+                    <button className="movies-card__button movies-card__button_save" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film10}>
+                    <button className="movies-card__button movies-card__button_save" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film11}>
+                    <button className="movies-card__button movies-card__button_save" type="button">
+                    </button>
+                </MoviesCard>
+                <MoviesCard film={film12}>
+                    <button className="movies-card__button movies-card__button_save" type="button">
+                    </button>
+                </MoviesCard>
             </MoviesCardList>
             <AnotherButton></AnotherButton>
             <Footer></Footer>

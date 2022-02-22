@@ -1,15 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import photo from "../../images/aboutme_photo.jpeg"
+import photo from "../../images/aboutme_photo.jpeg";
+import MainTitle from "../MainTitle/MainTitle";
 
 function AboutMe(props) {
     return (
         <article className="aboutMe" id="aboutme">
-            <div className="title__container title__container_aboutMe">
-                <p className="title">
-                    Студент
-                </p>
-            </div>
+            <MainTitle title="Студент"/>
             <article className="aboutMe__container">
                 <div className="aboutMe__info">
                     <h2 className="aboutMe__name">

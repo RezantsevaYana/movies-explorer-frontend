@@ -1,13 +1,10 @@
 import React from "react";
+import MainTitle from "../MainTitle/MainTitle";
 
 function AboutProject(props) {
     return (
         <article className="project" id="project">
-            <div className="title__container">
-                <p className="title">
-                    О проекте
-                </p>
-            </div>
+            <MainTitle title="О проекте"/>
             <ul className="project__table">
                 <li className="project__table-item">
                     <h2 className="project__table-title">

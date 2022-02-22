@@ -81,28 +81,6 @@
         font-size: 29px;
         line-height: 37px;
         top: 365px;
-        left: 55px;
-        max-width: 500px;
-        height: 104px;
-    }
-}
-
-@media screen and (max-width:560px) {
-    .promo__title {
-        font-size: 29px;
-        line-height: 37px;
-        top: 365px;
-        left: 30px;
-        max-width: 500px;
-        height: 104px;
-    }
-}
-
-@media screen and (max-width:515px) {
-    .promo__title {
-        font-size: 29px;
-        line-height: 37px;
-        top: 365px;
         left: 0px;
         max-width: 500px;
         height: 104px;

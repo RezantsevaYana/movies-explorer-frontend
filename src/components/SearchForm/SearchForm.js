@@ -7,11 +7,10 @@ function SearchForm(props) {
             <div className="search__container">
                 <input className="search__input" placeholder='Фильм' type='search'/>
                 <button className="search__start">
-                        <div className="search__start-img"/>
                 </button>
             </div>
             <label className="filter">
-                <input className="filter__checkbox" type="checkbox"></input>
+                <input className="filter__checkbox" type="checkbox" required></input>
                 <span className="filter__checkbox-slider"></span>
                 <span className="filter__text">Короткометражки</span>
             </label>
