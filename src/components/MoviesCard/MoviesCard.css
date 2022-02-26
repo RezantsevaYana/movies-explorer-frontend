@@ -1,0 +1,118 @@
+.movies-card {
+    width: 364px;
+    height: 271px;
+    margin: 0;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
+}
+
+.movies-card__caption {
+    width: 100%;
+    height: 68px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.movies-card__title {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    width: 280px;
+    margin: 0 0 9px 0;
+}
+
+.movies-card__length {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 13px;
+    color: #A0A0A0;
+    margin: 0;
+}
+
+.movies-card__button {
+    margin: 0;
+    padding: 0;
+    min-width: 30px;
+    min-height: 30px;
+    border: none;
+    background-color: transparent;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat; 
+}
+
+.movies-card__button:hover {
+    cursor: pointer;
+    transition-duration: .3s;
+    opacity: 0.6;
+}
+
+.movies-card__button_save {
+    background-image: url(../../images/save-film_btn.svg);
+}
+
+.movies-card__button_save_active {
+    background-image: url(../../images/save-film_btn_active.svg);
+}
+
+.movies-card__button_delete {
+    background-image: url(../../images/delete-film_btn.svg);
+}
+
+.movies-card__link {
+    width: 100%;
+    height: 203px;
+}
+
+.movies-card__link:hover {
+    cursor: pointer;
+    transition-duration: .3s;
+    opacity: 0.6;
+}
+
+.movies-card__img {
+    width: 100%;
+    height: auto;
+}
+
+@media screen and (max-width:1151px) {
+    .movies-card {
+        width: 339px;
+    } 
+}
+
+@media screen and (max-width:768px) {
+    .movies-card {
+        width: 339px;
+        height: 258px;
+    }
+
+    .movies-card__title {
+        width: 250px;
+    }
+
+    .movies-card__link {
+        width: 100%;
+        height: 190px;
+    }
+}
+
+@media screen and (max-width:751px) {
+    .movies-card {
+        width: 300px;
+        height: 236px;
+    }
+
+    .movies-card__title {
+        width: 210px;
+    }
+
+    .movies-card__link {
+        width: 100%;
+        height: 186px;
+    }
+}
+

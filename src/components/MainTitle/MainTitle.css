@@ -1,0 +1,26 @@
+.title__container {
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 1);
+}
+
+.title {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 27px;
+    width: 100%;
+    margin: 0px 0px 23px;
+}
+
+@media screen and (max-width:630px) {
+
+    .title__container {
+        height: 56px;
+    }
+
+    .title {
+        margin: 0px 0px 28px;
+    }
+}

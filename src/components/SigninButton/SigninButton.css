@@ -1,0 +1,62 @@
+.header__info {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.header__login {
+    text-decoration: none;
+    color: #000000;
+    margin-right: 26px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.header__button {
+    background: #000000;
+    border-radius: 3px;
+    border: none;
+    width: 76px;
+    height: 32px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 16px;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.header__button:hover {
+    cursor: pointer;
+    transition-duration: .3s;
+    opacity: 0.6;
+}
+
+.header__login:hover {
+    cursor: pointer;
+    transition-duration: .3s;
+    opacity: 0.6;
+}
+
+@media screen and (max-width:768px) {
+    .header__login {
+        margin-right: 30px;
+    }
+}
+
+@media screen and (max-width:400px) {
+    .header__login {
+        margin-right: 14px;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 16px;
+    }
+
+    .header__button {
+        margin-right: 14px;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 16px;
+    }
+}

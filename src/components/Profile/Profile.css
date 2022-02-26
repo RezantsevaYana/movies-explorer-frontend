@@ -1,0 +1,131 @@
+.profile {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 74px;
+    padding-bottom: 70px;
+    justify-content: flex-start;
+}
+
+.profile__name {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+    margin: 0;
+}
+
+.profile__links {
+    width: 410px;
+    height: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile__link {
+    border: none;
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+    color: black;
+    text-decoration: none;
+}
+
+.profile__link:last-of-type {
+    color: #FF4062;
+}
+
+.profile__link:hover {
+    cursor: pointer;
+    transition-duration: .3s;
+    opacity: 0.6;
+}
+
+.profile__form {
+    width: 410px;
+    height: 62px;
+    margin: 123px auto 220px;
+}
+
+.profile__item {
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.profile__item:last-of-type {
+    border-top: 1px #E8E8E8 solid;
+    align-items: flex-end;
+}
+
+.profile__label {
+    width: 141px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 13px;
+}
+
+.profile__input {
+    border: none;
+    width: 122px;
+    font-size: 11px;
+    line-height: 13px;
+    text-align: right;
+    color: black;
+    outline: none;
+}
+
+@media screen and (max-width:768px) {
+    .profile {
+        padding-top: 236px;
+        padding-bottom: 40px;
+    }
+
+    .profile__form {
+        margin: 96px auto 210px;
+    }
+}
+
+@media screen and (max-width:430px) {
+    .profile {
+        padding-top: 70px;
+        padding-bottom: 269px;
+    }
+
+    .profile__buttons {
+        width: 300px;
+        height: 46px;
+    }
+
+    .profile__button {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .profile__form {
+        width: 260px;
+        height: 62px;
+        margin: 80px auto 379px;
+    }
+
+    .profile__label {
+        width: 130px;
+    }
+    
+    .profile__input {
+        border: none;
+        width: 120px;
+        font-size: 11px;
+        line-height: 13px;
+        text-align: right;
+    }
+}
