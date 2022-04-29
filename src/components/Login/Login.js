@@ -1,26 +1,45 @@
 import React from "react";
-import{ Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useFormValidation } from "../../utils/formValidation.js";
 
-function Login(props) {
+function Login({ onLogin, loginError }) {
+    const { values, handleChange, errors, isValid, resetForm } = useFormValidation();
+
+    function handleSubmit(evt) {
+        evt.preventDefault();
+        onLogin({ email: values.email, password: values.password });
+        resetForm();
+    }
+
+    function handleInputChange(evt) {
+        handleChange(evt);
+    }
+
+
     return (
-       <section className="login">
-           <div className="sign__header">
-              <Link to="/"><div className="header__logo header__logo_sign"></div></Link>
-               <h2 className="sign__title">{props.title}</h2>
-           </div>
-           <form className="sign__form">
-               <div className="sign__item">
-                   <label className="sign__label">E-mail</label>
-                   <input className="sign__input" type="email" required minlength="2" maxlength="30"></input>
-                   <span className="error sign__input-error"></span>
-               </div>
-               <div className="sign__item">
-                   <label className="sign__label">Пароль</label>
-                   <input className="sign__input" type="password" required minlength="2" maxlength="30"></input>
-                   <span className="error sign__input-error"></span>
-               </div>
-               <div className="sign__buttons">
-                    <button className="sign__button" type="submit">
+        <section className="login">
+            <div className="sign__header">
+                <Link to="/"><div className="header__logo header__logo_sign"></div></Link>
+                <h2 className="sign__title">Рады видеть!</h2>
+            </div>
+            <form className="sign__form" onSubmit={handleSubmit}>
+                <div className="sign__item">
+                    <label className="sign__label">E-mail</label>
+                    <input className="sign__input" type="email" name="email" required minLength="2" maxLength="30"
+                        value={values.email || ""}
+                        onChange={handleInputChange}></input>
+                    <span className="error sign__input-error">{errors.email}</span>
+                </div>
+                <div className="sign__item">
+                    <label className="sign__label">Пароль</label>
+                    <input className="sign__input" type="password" name="password" required minLength="2" maxLength="30"
+                        value={values.password || ""}
+                        onChange={handleInputChange}></input>
+                    <span className="error sign__input-error">{errors.password}</span>
+                </div>
+                <div className="sign__buttons">
+                    <span className="error-message">{loginError}</span>
+                    <button className={isValid ? "sign__button" : "sign__button sign__button_invalid"} type="submit" disabled={!isValid}>
                         Войти
                     </button>
                     <p className="sign__subtitle">
@@ -30,9 +49,8 @@ function Login(props) {
                         </Link>
                     </p>
                 </div>
-           </form>
-       </section>
-
+            </form>
+        </section>
     );
 }
 

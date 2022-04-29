@@ -18,7 +18,7 @@ function Portfolio(props) {
                 </li>
             </ul>
 
-           
+
 
         </section>
     );

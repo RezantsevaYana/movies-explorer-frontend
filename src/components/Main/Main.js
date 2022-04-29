@@ -11,7 +11,6 @@ import SigninButton from "../SigninButton/SigninButton";
 function Main() {
     return (
         <>
-            <Header><SigninButton/></Header>
             <Promo></Promo>
             <AboutProject></AboutProject>
             <Techs></Techs>
@@ -19,8 +18,6 @@ function Main() {
             <Portfolio></Portfolio>
             <Footer></Footer>
         </>
-
-
     );
 }
 

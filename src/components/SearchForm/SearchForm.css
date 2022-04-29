@@ -1,3 +1,13 @@
+.search {
+    margin: 70px auto 69px;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+}
+
 .search__form {
     width: 100%;
     display: flex;
@@ -6,7 +16,6 @@
     align-items: center;
     background-color: #F9F9F9;
     border-radius: 9px;
-    margin: 70px auto 69px;
 }
 
 .search__container {
@@ -125,6 +134,12 @@
     font-size: 13px;
     line-height: 18px;
     margin-left: 14px;
+}
+
+.error-message {
+    text-align: center;
+    color: red;
+    margin-top: 50px;
 }
 
 @media screen and (max-width:1160px) {
