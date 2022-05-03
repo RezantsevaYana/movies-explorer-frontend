@@ -18,6 +18,7 @@ import Header from '../Header/Header.js';
 import Navigation from '../Navigation/Navigation.js';
 import SigninButton from '../SigninButton/SigninButton.js';
 import ScreenSize from '../../hooks/ScreenSize.js';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute.js';
 
 
 function App() {
@@ -198,9 +199,9 @@ function App() {
       .then((res) => {
         if (res.token) {
           localStorage.setItem("jwt", res.token);
-          //  console.log(res.token);
+         // console.log(res.token);
           setIsLoggedIn(true);
-          navigate('/movies');
+          navigate('/');
           return res;
         } else {
           return
@@ -237,7 +238,10 @@ function App() {
               <Header>
                 {isLoggedIn ? <Navigation onHeaderOpen={onHeaderOpen} /> : <SigninButton />}
               </Header>
-              <Movies onHeaderOpen={onHeaderOpen}
+              <ProtectedRoute
+                component={Movies}
+                isLoggedIn={isLoggedIn}
+                onHeaderOpen={onHeaderOpen}
                 handleSaveMovies={handleSaveMovies}
                 handleDeleteMovies={handleDeleteMovies}
                 favoriteList={favoriteList}
@@ -249,9 +253,9 @@ function App() {
                 setAddMovies={setAddMovies}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
-              />
+              ></ProtectedRoute>
             </>
-          } />
+          } ></Route>
           <Route path="/" element={
             <>
               <Header>
@@ -265,7 +269,9 @@ function App() {
               <Header>
                 {isLoggedIn ? <Navigation onHeaderOpen={onHeaderOpen} /> : <SigninButton />}
               </Header>
-              <SavedMovies
+              <ProtectedRoute
+                component={SavedMovies}
+                isLoggedIn={isLoggedIn}
                 onHeaderOpen={onHeaderOpen}
                 favoriteList={favoriteList}
                 setFavoriteList={setFavoriteList}
@@ -278,7 +284,8 @@ function App() {
                 setAddMovies={setAddMovies}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
-              />
+              >
+              </ProtectedRoute>
             </>
           } />
           <Route path="/profile" element={
