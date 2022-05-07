@@ -26,16 +26,30 @@ function Register({ onRegister, registerError, setRegisterError }) {
             <form className="sign__form" onSubmit={handleSubmit}>
                 <div className="sign__item">
                     <label className="sign__label">Имя</label>
-                    <input className="sign__input" type="name" name="name" required minLength="2" maxLength="30"
+                    <input className="sign__input"
+                        type="name"
+                        name="name"
+                        required
+                        minLength="2"
+                        maxLength="30"
                         value={values.name || ""}
-                        onChange={handleInputChange}></input>
+                        onChange={handleInputChange}
+                        pattern='^[A-Za-zА-Яа-яЁё\s\-]{2,30}$'
+                    ></input>
                     <span className="error sign__input-error">{errors.name}</span>
                 </div>
                 <div className="sign__item">
                     <label className="sign__label">E-mail</label>
-                    <input className="sign__input" type="email" name="email" required minLength="2" maxLength="30"
+                    <input className="sign__input"
+                        type="email"
+                        name="email"
+                        required
+                        minLength="2"
+                        maxLength="30"
                         value={values.email || ""}
-                        onChange={handleInputChange}></input>
+                        onChange={handleInputChange}
+                        pattern='^[^@\s]+@[^@\s]+\.[^@\s]+$'
+                        ></input>
                     <span className="error sign__input-error">{errors.email}</span>
                 </div>
                 <div className="sign__item">

@@ -20,7 +20,6 @@ import SigninButton from '../SigninButton/SigninButton.js';
 import ScreenSize from '../../hooks/ScreenSize.js';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute.js';
 
-
 function App() {
   // стейт, отвечающий за данные текущего пользвателя, сюда сохраняются данные о пользователе
   const [currentUser, setCurrentUser] = React.useState({});
@@ -67,45 +66,54 @@ function App() {
     setIsInfoTooLtip(true);
   }
 
-  function getCards() {
-    if (width >= 1280) {
-      setMoviesCount(12);
-      setAddMovies(3);
-    } else if (width < 1279 && width >= 767) {
-      setMoviesCount(8);
-      setAddMovies(2);
-    } else if (width <= 766) {
-      setMoviesCount(5);
-      setAddMovies(1);
-    }
-  }
 
-  // рендер карточек
+
   useEffect(() => {
+    function getCards() {
+      if (width >= 1280) {
+        setMoviesCount(12);
+        setAddMovies(3);
+      } else if (width < 1279 && width >= 767) {
+        setMoviesCount(8);
+        setAddMovies(2);
+      } else if (width <= 766) {
+        setMoviesCount(5);
+        setAddMovies(1);
+      }
+    }
+    getCards()
+  }, [width])
+
+
+
+  // загрузка первоначальной коллекции карточек и информации о пользователе
+  React.useEffect(() => {
     setIsLoading(true);
-    moviesApi.getInitialCards()
-      .then((movies) => {
-        localStorage.setItem('movies', JSON.stringify(movies));
-        getCards()
+    Promise.all([moviesApi.getInitialCards()])
+      .then(([movies]) => {
         setMoviesList(movies);
         setIsLoading(false);
+        sessionStorage.setItem('movies', JSON.stringify(movies));
       })
       .catch((err) => {
         console.log(`Внимание! ${err}`);
       });
-  }, [width]);
+  }, []);
+
+
+
 
   // сохранение фильма
   function handleSaveMovies(movie) {
     const jwt = localStorage.getItem("jwt");
-    console.log(movie)
+    //   console.log(movie)
     setFavoriteList([...favoriteList, movie]);
     mainApi.savedMovies({ jwt, movie })
       .then((res) => {
-        console.log(res);
-        console.log(favoriteList)
+        //     console.log(res);
+        //     console.log(favoriteList)
         setFavoriteList([...favoriteList, res]);
-        localStorage.setItem('savedMovies', JSON.stringify([...favoriteList, res]));
+        sessionStorage.setItem('savedMovies', JSON.stringify([...favoriteList, res]));
       })
       .catch((err) => {
         console.log(`Внимание! ${err}`);
@@ -124,9 +132,8 @@ function App() {
         if (res) {
           const arr = favoriteList.filter((item) => item.movieId !== id);
           setFavoriteList(arr);
-          localStorage.setItem('savedMovies', JSON.stringify(arr));
+          sessionStorage.setItem('savedMovies', JSON.stringify(arr));
         }
-
       })
       .catch((err) => {
         console.log(`Внимание! ${err}`);
@@ -178,12 +185,11 @@ function App() {
   function onRegister({ email, password, name }) {
     mainApi.register({ email, password, name })
       .then((data) => {
-        if (data.id) {
-          navigate('/signin');
-          onLogin({ email, password });
-        }
+        onLogin({ email, password });
+        navigate('/movies');
         setTitle("Вы успешно зарегистрировались!");
         setImage(register);
+        setIsLoggedIn(true);
       }).catch((err) => {
         console.log(`Внимание! ${err}`);
         setTitle("Что-то пошло не так! Попробуйте ещё раз.");
@@ -197,15 +203,12 @@ function App() {
   function onLogin({ email, password }) {
     mainApi.login({ email, password })
       .then((res) => {
-        if (res.token) {
-          localStorage.setItem("jwt", res.token);
-         // console.log(res.token);
-          setIsLoggedIn(true);
-          navigate('/');
-          return res;
-        } else {
-          return
-        }
+        localStorage.setItem("jwt", res.token);
+        localStorage.setItem('currentUser', JSON.stringify(res));
+        // console.log(res.token);
+        setIsLoggedIn(true);
+        navigate('/movies');
+        return res;
       })
       .catch((err) => {
         console.log(`Внимание! ${err}`);
@@ -219,15 +222,13 @@ function App() {
 
   // удаление токена при выходе
   function signOut() {
-    localStorage.removeItem("jwt");
-    localStorage.removeItem('savedMovies');
-    navigate("/signin");
+    localStorage.clear();
+    navigate("/");
     setFavoriteList([]);
     setMoviesList([]);
     setCurrentUser([]);
     setIsLoggedIn(false);
   }
-
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -239,8 +240,8 @@ function App() {
                 {isLoggedIn ? <Navigation onHeaderOpen={onHeaderOpen} /> : <SigninButton />}
               </Header>
               <ProtectedRoute
-                component={Movies}
                 isLoggedIn={isLoggedIn}
+                component={Movies}
                 onHeaderOpen={onHeaderOpen}
                 handleSaveMovies={handleSaveMovies}
                 handleDeleteMovies={handleDeleteMovies}
@@ -284,6 +285,8 @@ function App() {
                 setAddMovies={setAddMovies}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
               >
               </ProtectedRoute>
             </>
@@ -293,16 +296,31 @@ function App() {
               <Header>
                 {isLoggedIn ? <Navigation onHeaderOpen={onHeaderOpen} /> : <SigninButton />}
               </Header>
-              <Profile signOut={signOut} onUpdateUser={handleUpdateUser} changeError={changeError} />
+              <ProtectedRoute
+                component={Profile}
+                isLoggedIn={isLoggedIn}
+                signOut={signOut}
+                onUpdateUser={handleUpdateUser}
+                changeError={changeError}
+              >
+              </ProtectedRoute>
             </>
           } />
-          <Route path="/signin" element={
-            <Login onLogin={onLogin} loginError={loginError} />
-          } />
+          <Route path="/signin"
+            element={<ProtectedRoute
+              component={Login}
+              isLoggedIn={!isLoggedIn}
+              onLogin={onLogin}
+              loginError={loginError}
+            ></ProtectedRoute>} />
           <Route path="/signup" element={
-            <Register onRegister={onRegister}
+            <ProtectedRoute
+              component={Register}
+              isLoggedIn={!isLoggedIn}
+              onRegister={onRegister}
               registerError={registerError}
-              setRegisterError={setRegisterError} />
+              setRegisterError={setRegisterError}>
+            </ProtectedRoute>
           } />
           <Route path="*" element={
             <NotFound />

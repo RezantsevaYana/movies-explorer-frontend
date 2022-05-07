@@ -10,9 +10,6 @@ function SearchForm(props) {
     // стейт-переменная запроса
     const [value, setValue] = React.useState(valueData && routes.pathname === '/movies' ? valueData : '');
 
-    // сохраняем положение тумблера в локальное хранилище
-    const checkBoxStatus = JSON.parse(localStorage.getItem('checkBoxStatus'));
-
 
     // Обработчик изменения инпута обновляет стейт
     function handleChange(e) {
@@ -30,22 +27,43 @@ function SearchForm(props) {
         if (value) {
             props.setMoviesCount(12);
             setIsEmpty(true);
+            props.setIsLoading(true);
+            setTimeout(() => {
+                props.setIsLoading(false);
+            },
+                1000)
         } else {
             setIsEmpty(false);
         }
     }
 
+    function preloader() {
+        props.setIsLoading(true);
+        setTimeout(() => {
+            props.setIsLoading(false);
+        },
+            1000)
+    }
+
     function onChangeCheckBox() {
         if (routes.pathname === '/movies' && props.checked === false) {
             localStorage.setItem('checkBoxStatus', true);
+            props.handleCheckboxChange(true)
             props.setChecked(true);
+            preloader();
         } else if (routes.pathname === '/movies' && props.checked === true) {
             localStorage.setItem('checkBoxStatus', false);
+            props.handleCheckboxChange(false);
             props.setChecked(false);
+            preloader();
         } else if (routes.pathname === '/saved-movies' && props.checked === false) {
+            props.handleCheckboxChange(true)
             props.setChecked(true);
+            preloader();
         } else if (routes.pathname === '/saved-movies' && props.checked === true) {
+            props.handleCheckboxChange(false);
             props.setChecked(false);
+            preloader();
         }
     }
 
@@ -68,7 +86,7 @@ function SearchForm(props) {
                     </button>
                 </div>
                 <label className="filter">
-                    <input className="filter__checkbox" type="checkbox" onChange={onChangeCheckBox} checked={props.checked}></input>
+                    <input className="filter__checkbox" type="checkbox" onChange={onChangeCheckBox} checked={routes.path = '/movies' ? props.checkBoxStatus : props.checked}></input>
                     <span className="filter__checkbox-slider"></span>
                     <span className="filter__text">Короткометражки</span>
                 </label>

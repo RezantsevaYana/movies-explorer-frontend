@@ -30,7 +30,8 @@ function MoviesCard({ movie, handleSaveMovies, handleDeleteMovies, favoriteList 
     };
 
     const image = movie.image.url === undefined ? movie.image : `https://api.nomoreparties.co${movie.image.url}`
-
+   
+    const trailer = movie.trailer === undefined ? movie.trailerLink : movie.trailer;
 
     return (
         <figure className="movies-card">
@@ -50,7 +51,7 @@ function MoviesCard({ movie, handleSaveMovies, handleDeleteMovies, favoriteList 
                         )
                 }
             </figcaption>
-            <a className="movies-card__link" href={movie.trailerLink} target="_blank">
+            <a className="movies-card__link" href={trailer} target="_blank">
                 <img className="movies-card__img" src={image} alt={movie.nameRu} />
             </a>
         </figure>

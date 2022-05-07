@@ -109,7 +109,6 @@ export class MainApi {
         return fetch(`${this._baseUrl}/movies`, {
             method: "GET",
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${jwt}`,
             },

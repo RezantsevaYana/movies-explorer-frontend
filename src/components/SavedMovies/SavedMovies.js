@@ -17,7 +17,7 @@ function SavedMovies({ onHeaderOpen,
     addMovies,
     setAddMovies,
     isLoading,
-    setIsLoading, }) {
+    setIsLoading }) {
 
 
     const routes = useLocation()
@@ -25,23 +25,27 @@ function SavedMovies({ onHeaderOpen,
     const [value, setValue] = React.useState(valueData && routes.pathname === '/movies' ? valueData : '')
 
     // стейт-переменная состояния тумблера
-    const checkBoxStatus = JSON.parse(localStorage.getItem('checkBoxStatus'));
     const [checked, setChecked] = useState(false);
     const [shortList, setShortList] = useState([])
 
     const [message, setMessage] = React.useState('')
 
+    console.log(favoriteList)
+
     // фильтрация через строку поиска
     useEffect(() => {
-        const filterMovies = favoriteList.filter((movie) =>
+        const filterMovies = JSON.parse(sessionStorage.getItem('savedMovies')).filter((movie) =>
             movie.nameRU.toLowerCase().indexOf(value.toLowerCase()) > -1)
         if (filterMovies.length) {
             setFavoriteList(filterMovies)
         } else {
-            setFavoriteList([]);
+            setFavoriteList([])
             setMessage('Ничего не найдено');
         }
     }, [value])
+
+    console.log(checked)
+    //console.log(checkBoxStatus)
 
     function handleSubmitSearchForm(value) {
         setValue(value);
@@ -49,15 +53,20 @@ function SavedMovies({ onHeaderOpen,
 
     // фильтрация массива через установку тумблера (продолжительность фильма)
     useEffect(() => {
-        if (checked) {
-            const newShortList = favoriteList.filter(movie => movie.duration <= 40)
+        if (checked && favoriteList.length) {
+            const newShortList = JSON.parse(sessionStorage.getItem('savedMovies')).filter(movie => movie.duration <= 40)
             newShortList.length ?
                 setShortList(newShortList) : setFavoriteList([])
         } else {
-            setShortList([]);
+            setShortList([])
             setMessage('Ничего не найдено');
         }
     }, [checked])
+
+
+    function handleCheckboxChange(isCheckboxOn) {
+        setChecked(isCheckboxOn)
+    }
 
 
     return (
@@ -66,9 +75,11 @@ function SavedMovies({ onHeaderOpen,
                 value={value}
                 setValue={setValue}
                 handleSubmitSearchForm={handleSubmitSearchForm}
-                checkBoxStatus={checkBoxStatus}
+                handleCheckboxChange={handleCheckboxChange}
                 checked={checked}
                 setChecked={setChecked}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
             >
             </SearchForm>
             <MoviesCardList

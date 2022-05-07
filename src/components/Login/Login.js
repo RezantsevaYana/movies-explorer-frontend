@@ -25,9 +25,17 @@ function Login({ onLogin, loginError }) {
             <form className="sign__form" onSubmit={handleSubmit}>
                 <div className="sign__item">
                     <label className="sign__label">E-mail</label>
-                    <input className="sign__input" type="email" name="email" required minLength="2" maxLength="30"
+                    <input className="sign__input"
+                        type="email"
+                        name="email"
+                        required
+                        minLength="2"
+                        maxLength="30"
                         value={values.email || ""}
-                        onChange={handleInputChange}></input>
+                        onChange={handleInputChange}
+                        pattern='^[^@\s]+@[^@\s]+\.[^@\s]+$'
+                        >
+                        </input>
                     <span className="error sign__input-error">{errors.email}</span>
                 </div>
                 <div className="sign__item">
