@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Navlink, useLocation } from "react-router-dom";
 
-function MoviesCard({ movie, handleSaveMovies, handleDeleteMovies, favoriteList }) {
+function MoviesCard({ movie, handleSaveMovies, handleDeleteMovies, favoriteList, favoriteListForRender, setFavoriteListForRender }) {
     const [isSavedMovies, setIsSavedMovies] = useState(false);
     const routes = useLocation();
 

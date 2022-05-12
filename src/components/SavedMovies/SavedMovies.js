@@ -6,10 +6,9 @@ import { useLocation } from 'react-router';
 
 
 
-function SavedMovies({ onHeaderOpen,
-    favoriteList,
-    setFavoriteList,
+function SavedMovies({
     handleDeleteMovies,
+    handleSaveMovies,
     moviesList,
     setMoviesList,
     moviesCount,
@@ -17,7 +16,10 @@ function SavedMovies({ onHeaderOpen,
     addMovies,
     setAddMovies,
     isLoading,
-    setIsLoading }) {
+    setIsLoading,
+    favoriteList,
+    setFavoriteList,
+ }) {
 
 
     const routes = useLocation()
@@ -27,19 +29,22 @@ function SavedMovies({ onHeaderOpen,
     // стейт-переменная состояния тумблера
     const [checked, setChecked] = useState(false);
     const [shortList, setShortList] = useState([])
-
     const [message, setMessage] = React.useState('')
 
-    console.log(favoriteList)
 
+    const [favoriteListForRender, setFavoriteListForRender] = React.useState([])
+
+ 
     // фильтрация через строку поиска
     useEffect(() => {
-        const filterMovies = JSON.parse(sessionStorage.getItem('savedMovies')).filter((movie) =>
+    //    favoriteList.length ? setMessage('') : setMessage('Ничего не найдено') 
+        const filterMovies = favoriteList.filter((movie) =>
             movie.nameRU.toLowerCase().indexOf(value.toLowerCase()) > -1)
         if (filterMovies.length) {
-            setFavoriteList(filterMovies)
+            setFavoriteListForRender(filterMovies);
+            localStorage.setItem('foundSaveMovies', JSON.stringify(favoriteList));
         } else {
-            setFavoriteList([])
+            setFavoriteListForRender([])
             setMessage('Ничего не найдено');
         }
     }, [value])
@@ -54,9 +59,10 @@ function SavedMovies({ onHeaderOpen,
     // фильтрация массива через установку тумблера (продолжительность фильма)
     useEffect(() => {
         if (checked && favoriteList.length) {
-            const newShortList = JSON.parse(sessionStorage.getItem('savedMovies')).filter(movie => movie.duration <= 40)
+            const newShortList = JSON.parse(localStorage.getItem('foundSaveMovies')).filter(movie => movie.duration <= 40)
             newShortList.length ?
-                setShortList(newShortList) : setFavoriteList([])
+                setShortList(newShortList) : setFavoriteListForRender([])
+                localStorage.setItem('foundSaveMovies', JSON.stringify(newShortList));
         } else {
             setShortList([])
             setMessage('Ничего не найдено');
@@ -83,7 +89,8 @@ function SavedMovies({ onHeaderOpen,
             >
             </SearchForm>
             <MoviesCardList
-                favoriteList={checked ? shortList : favoriteList}
+                favoriteListForRender={checked ? shortList : favoriteListForRender}
+                favoriteList={favoriteList}
                 handleDeleteMovies={handleDeleteMovies}
                 moviesList={moviesList}
                 setMoviesList={setMoviesList}

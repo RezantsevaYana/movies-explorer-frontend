@@ -64,8 +64,8 @@ function Profile(props) {
                     <span className="error sign__input-error">{errors.email}</span>
                     <div className="profile__links">
                         <button className={isValid ? "profile__link" : "profile__link profile__link_invalid"} type="submit" disabled={disabled}>Редактировать</button>
-                        <button className="profile__button" onClick={props.signOut} type="button">Выйти из аккаунта</button>
                     </div>
+                    <button className="profile__button" onClick={props.signOut} type="button">Выйти из аккаунта</button>
                 </form>
             </div>
         </section>

@@ -24,9 +24,8 @@ export class MainApi {
         }).then(this._checkResult)
     };
 
-    // проверка валидности токена и полученя email для вставки в шапку сайта
     checkToken = (jwt) => {
-        return fetch(`${this._baseUrl}/users/me`, {
+        return fetch(`https://api.rezantseva.movies.nomoredomains.xyz/users/me`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -105,7 +104,7 @@ export class MainApi {
     }
 
     // возвращает все сохранённые текущим  пользователем фильмы
-    getSavedMovies(jwt) {
+    getMovies(jwt) {
         return fetch(`${this._baseUrl}/movies`, {
             method: "GET",
             headers: {

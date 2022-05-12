@@ -15,7 +15,7 @@ function Movies({ onHeaderOpen,
     addMovies,
     setAddMovies,
     isLoading,
-    setIsLoading, }) {
+    setIsLoading }) {
     const routes = useLocation();
 
     const [message, setMessage] = React.useState('')
@@ -29,7 +29,7 @@ function Movies({ onHeaderOpen,
     const [checked, setChecked] = useState(false);
     const [shortList, setShortList] = useState([]);
 
-
+ 
     // фильтрация массива через поиск по ключевому слову
     useEffect(() => {
         const filterMovies = JSON.parse(sessionStorage.getItem('movies')).filter((movie) =>
@@ -52,7 +52,7 @@ function Movies({ onHeaderOpen,
     // фильтрация массива через установку тумблера (продолжительность фильма)
     useEffect(() => {
         if (checkBoxStatus) {
-            const newShortList = JSON.parse(sessionStorage.getItem('movies')).filter(movie => movie.duration <= 40)
+            const newShortList = JSON.parse(localStorage.getItem('foundMovies')).filter(movie => movie.duration <= 40)
             setShortList(newShortList);
             localStorage.setItem('foundMovies', JSON.stringify(newShortList));
         } else {

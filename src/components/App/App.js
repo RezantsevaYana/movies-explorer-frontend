@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import Movies from '../Movies/Movies.js';
 import HeaderPopup from '../HeaderPopup/HeaderPopup.js';
 import SavedMovies from '../SavedMovies/SavedMovies.js';
@@ -21,12 +21,24 @@ import ScreenSize from '../../hooks/ScreenSize.js';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute.js';
 
 function App() {
+  const routes = useLocation();
+
+  const isHeader =
+    routes.pathname === '/movies' ||
+    routes.pathname === '/' ||
+    routes.pathname === '/saved-movies' ||
+    routes.pathname === '/profile';
+
+
   // стейт, отвечающий за данные текущего пользвателя, сюда сохраняются данные о пользователе
   const [currentUser, setCurrentUser] = React.useState({});
   // стэйт переменная открыти попапа
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
+
   // стэйт переменные регистрации и авторизации
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [isUserCheck, setIsUserCheck] = React.useState(false);
+
   const [registerError, setRegisterError] = React.useState("");
   const [loginError, setLoginError] = React.useState("");
   const [changeError, setChangeError] = React.useState("");
@@ -38,6 +50,7 @@ function App() {
 
   // переменная состояния для сохраненных фильмов в избранном
   const [favoriteList, setFavoriteList] = React.useState([]);
+
   const [moviesList, setMoviesList] = React.useState([]);
   // переменные состояния для добавления фильмов
   const [moviesCount, setMoviesCount] = React.useState(0);
@@ -66,8 +79,7 @@ function App() {
     setIsInfoTooLtip(true);
   }
 
-
-
+  // добавление карточек в зависимости от ширины экрана
   useEffect(() => {
     function getCards() {
       if (width >= 1280) {
@@ -84,36 +96,51 @@ function App() {
     getCards()
   }, [width])
 
-
-
-  // загрузка первоначальной коллекции карточек и информации о пользователе
-  React.useEffect(() => {
+  // рендер коллекции карточек
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
     setIsLoading(true);
-    Promise.all([moviesApi.getInitialCards()])
-      .then(([movies]) => {
+    // рендер первоначальной коллекции фильмов
+    moviesApi.getInitialCards()
+      .then((movies) => {
         setMoviesList(movies);
-        setIsLoading(false);
         sessionStorage.setItem('movies', JSON.stringify(movies));
-      })
+        setIsLoading(false);
+      }).catch((err) => {
+        console.log(`Внимание! ${err}`);
+      });
+
+    // рендер сохраненных фильмов
+    mainApi.getMovies(jwt).then((res) => {
+      console.log(res)
+      //  console.log('отработал useEffect рендера списка сохраненных фильмов')
+      setFavoriteList(res[2].data);
+      localStorage.setItem('savedMovies', JSON.stringify(res[2].data));
+      setIsLoading(false);
+    })
       .catch((err) => {
         console.log(`Внимание! ${err}`);
       });
-  }, []);
+
+  }, [])
 
 
+
+
+  //console.log(favoriteList)
 
 
   // сохранение фильма
   function handleSaveMovies(movie) {
     const jwt = localStorage.getItem("jwt");
-    //   console.log(movie)
+    console.log(movie)
     setFavoriteList([...favoriteList, movie]);
     mainApi.savedMovies({ jwt, movie })
       .then((res) => {
-        //     console.log(res);
-        //     console.log(favoriteList)
+        console.log(res)
+        console.log(favoriteList)
         setFavoriteList([...favoriteList, res]);
-        sessionStorage.setItem('savedMovies', JSON.stringify([...favoriteList, res]));
+        localStorage.setItem('savedMovies', JSON.stringify([...favoriteList, res]));
       })
       .catch((err) => {
         console.log(`Внимание! ${err}`);
@@ -130,15 +157,17 @@ function App() {
       then((res) => {
         console.log(res);
         if (res) {
-          const arr = favoriteList.filter((item) => item.movieId !== id);
+          const arr = JSON.parse(localStorage.getItem('savedMovies')).filter((item) => item.movieId !== id);
           setFavoriteList(arr);
-          sessionStorage.setItem('savedMovies', JSON.stringify(arr));
+          localStorage.setItem('savedMovies', JSON.stringify(arr));
         }
       })
       .catch((err) => {
         console.log(`Внимание! ${err}`);
       })
   }
+
+
 
   // изменение инорфмации о пользователе
   function handleUpdateUser({ name, email }) {
@@ -152,34 +181,33 @@ function App() {
         }
       }).catch((err) => {
         console.log(`Внимание! ${err}`);
-        setChangeError('Что-то пошло не так! Попробуйте ещё раз.')
+        setTitle("Что-то пошло не так! Попробуйте ещё раз.");
         setImage(notRegister);
-        setRegisterError('Что-то пошло не так! Попробуйте ещё раз.');
       }).finally(handleInfoTooLtip)
   }
 
+
   // проверка токенов авторизованных пользователей, вернувшихся в приложение
-  React.useEffect(() => {
+  useEffect(() => {
+    console.log('useEffect в App отработал')
     const jwt = localStorage.getItem("jwt");
-    if (jwt)
-      // проверяем токен
-      mainApi
-        .checkToken(jwt)
-        .then((res) => {
-          // авторизуем пользователя, если токен найден, перенаправляя его на главную страницу
-          if (res) {
-            setCurrentUser(res)
-            setIsLoggedIn(true);
-            // navigate("/");
-          } else {
-            setCurrentUser({})
-          }
-        })
-        .catch((err) => {
-          console.log(`Внимание! ${err}`);
-          navigate("/signin");
-        });
-  }, [navigate]);
+    if (localStorage.jwt) {
+      setIsLoggedIn(true);
+      mainApi.getUserInfo(jwt)
+      .then((profile) => {
+        setIsLoggedIn(true);
+        console.log(profile)
+        setCurrentUser(profile);
+        localStorage.setItem('currentUser', JSON.stringify(profile))
+        navigate(routes.pathname);
+      })
+      .catch((err) => {
+        navigate('/signin');
+        console.log(`Внимание! ${err}`);
+      })
+    }
+  }, []);
+
 
   // регистрация
   function onRegister({ email, password, name }) {
@@ -194,20 +222,24 @@ function App() {
         console.log(`Внимание! ${err}`);
         setTitle("Что-то пошло не так! Попробуйте ещё раз.");
         setImage(notRegister);
-        setRegisterError('Что-то пошло не так! Попробуйте ещё раз.');
         if (err === 400) return setRegisterError('Некорректно заполнено одно из полей');
+        setRegisterError('Что-то пошло не так, попробуйте еще раз!')
       }).finally(handleInfoTooLtip)
   }
+
+
 
   // авторизация
   function onLogin({ email, password }) {
     mainApi.login({ email, password })
       .then((res) => {
+        navigate('/movies');
         localStorage.setItem("jwt", res.token);
+        setData();
         localStorage.setItem('currentUser', JSON.stringify(res));
         // console.log(res.token);
+        localStorage.setItem('isLoggedIn', true)
         setIsLoggedIn(true);
-        navigate('/movies');
         return res;
       })
       .catch((err) => {
@@ -220,25 +252,50 @@ function App() {
       })
   }
 
+  function setData() {
+    const jwt = localStorage.getItem("jwt");
+    const profileInfo = mainApi.getUserInfo(jwt);
+    const movies = moviesApi.getInitialCards();
+    const favoriteMovies = mainApi.getMovies(jwt);
+    Promise.all([profileInfo, movies, favoriteMovies])
+      .then((res) => {
+        setCurrentUser(res);
+        setMoviesList(res);
+        setFavoriteList(res[2].data);
+
+        localStorage.setItem('currentUser', JSON.stringify(res));
+        localStorage.setItem('movies', JSON.stringify(res));
+        localStorage.setItem('savedMovies', JSON.stringify(res[2].data));
+
+      }).catch((err) => {
+        console.log(`Внимание! ${err}`);
+      })
+  };
+
+
+
   // удаление токена при выходе
   function signOut() {
     localStorage.clear();
     navigate("/");
-    setFavoriteList([]);
-    setMoviesList([]);
+    //setFavoriteList([]);
+    //  setMoviesList([]);
     setCurrentUser([]);
     setIsLoggedIn(false);
   }
 
+
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
-        <Routes>
+        {isHeader && <Header>
+          {isLoggedIn ? <Navigation onHeaderOpen={onHeaderOpen} /> : <SigninButton />}
+        </Header>}
+
+        {<Routes>
           <Route path='/movies' element={
-            <>
-              <Header>
-                {isLoggedIn ? <Navigation onHeaderOpen={onHeaderOpen} /> : <SigninButton />}
-              </Header>
+
               <ProtectedRoute
                 isLoggedIn={isLoggedIn}
                 component={Movies}
@@ -255,21 +312,14 @@ function App() {
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
               ></ProtectedRoute>
-            </>
           } ></Route>
           <Route path="/" element={
-            <>
-              <Header>
-                {isLoggedIn ? <Navigation onHeaderOpen={onHeaderOpen} /> : <SigninButton />}
-              </Header>
+        
               <Main />
-            </>
+ 
           } />
           <Route path="/saved-movies" element={
-            <>
-              <Header>
-                {isLoggedIn ? <Navigation onHeaderOpen={onHeaderOpen} /> : <SigninButton />}
-              </Header>
+           
               <ProtectedRoute
                 component={SavedMovies}
                 isLoggedIn={isLoggedIn}
@@ -277,6 +327,7 @@ function App() {
                 favoriteList={favoriteList}
                 setFavoriteList={setFavoriteList}
                 handleDeleteMovies={handleDeleteMovies}
+                handleSaveMovies={handleSaveMovies}
                 moviesList={moviesList}
                 setMoviesList={setMoviesList}
                 moviesCount={moviesCount}
@@ -289,13 +340,10 @@ function App() {
                 setIsLoading={setIsLoading}
               >
               </ProtectedRoute>
-            </>
+           
           } />
           <Route path="/profile" element={
-            <>
-              <Header>
-                {isLoggedIn ? <Navigation onHeaderOpen={onHeaderOpen} /> : <SigninButton />}
-              </Header>
+          
               <ProtectedRoute
                 component={Profile}
                 isLoggedIn={isLoggedIn}
@@ -304,7 +352,7 @@ function App() {
                 changeError={changeError}
               >
               </ProtectedRoute>
-            </>
+      
           } />
           <Route path="/signin"
             element={<ProtectedRoute
@@ -325,7 +373,7 @@ function App() {
           <Route path="*" element={
             <NotFound />
           } />
-        </Routes>
+        </Routes>}
 
         <HeaderPopup isOpen={isPopupOpen}
           onClose={closeAllPopups}
@@ -342,3 +390,6 @@ function App() {
 }
 
 export default App;
+
+
+

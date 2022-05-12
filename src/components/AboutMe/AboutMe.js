@@ -4,6 +4,7 @@ import photo from "../../images/aboutme_photo.jpeg";
 import MainTitle from "../MainTitle/MainTitle";
 
 function AboutMe(props) {
+
     return (
         <article className="aboutMe" id="aboutme">
             <MainTitle title="Студент" />
@@ -32,4 +33,6 @@ function AboutMe(props) {
 }
 
 export default AboutMe;
+
+
 

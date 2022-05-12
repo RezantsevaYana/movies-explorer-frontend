@@ -16,6 +16,7 @@ function MoviesCardList({
   message,
   isLoading,
   setIsLoading,
+  favoriteListForRender,
 }) {
 
   const { pathname } = useLocation();
@@ -47,8 +48,8 @@ function MoviesCardList({
                   return '';
                 }
               })}
-            {pathname === '/saved-movies' && favoriteList &&
-              favoriteList.map((item, index) => {
+            {pathname === '/saved-movies' && favoriteListForRender &&
+              favoriteListForRender.map((item, index) => {
                 if (index + 1 <= moviesCount) {
                   return (
                     <MoviesCard
