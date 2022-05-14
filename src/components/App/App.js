@@ -36,7 +36,7 @@ function App() {
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
 
   // стэйт переменные регистрации и авторизации
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(!!localStorage.getItem('isLoggedIn'));
   const [isUserCheck, setIsUserCheck] = React.useState(false);
 
   const [registerError, setRegisterError] = React.useState("");
@@ -100,9 +100,8 @@ function App() {
 
   console.log(isLoggedIn)
 
-  // рендер коллекции карточек
+
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
     setIsLoading(true);
     // рендер первоначальной коллекции фильмов
     moviesApi.getInitialCards()
@@ -114,21 +113,17 @@ function App() {
         console.log(`Внимание! ${err}`);
       });
 
+ 
     // рендер сохраненных фильмов
-    mainApi.getMovies(jwt).then((res) => {
-      console.log(res)
-      //  console.log('отработал useEffect рендера списка сохраненных фильмов')
-      setFavoriteList(res[2].data);
-      localStorage.setItem('savedMovies', JSON.stringify(res[2].data));
-      setIsLoading(false);
-    })
-      .catch((err) => {
-        console.log(`Внимание! ${err}`);
-      });
+    if (localStorage.getItem('savedMovies')) {
+      setFavoriteList(JSON.parse(localStorage.getItem('savedMovies')));
+      setFavoriteListForRender(JSON.parse(localStorage.getItem('savedMovies')));
+    } else {
+      setFavoriteList([]);
+      setFavoriteListForRender([]);
+    }
 
   }, [])
-
-
 
 
 
@@ -166,7 +161,6 @@ function App() {
           const arr = JSON.parse(localStorage.getItem('savedMovies')).filter((item) => item.movieId !== id);
           setFavoriteList(arr)
           setFavoriteListForRender(arr);
-       //   setShortList(arr)
           localStorage.setItem('savedMovies', JSON.stringify(arr));
         }
       })
@@ -174,7 +168,6 @@ function App() {
         console.log(`Внимание! ${err}`);
       })
   }
-
 
 
   // изменение инорфмации о пользователе
@@ -246,7 +239,7 @@ function App() {
     mainApi.login({ email, password })
       .then((res) => {
         navigate('/movies');
-        setData();
+     //   setData();
         localStorage.setItem("jwt", res.token);
         localStorage.setItem('currentUser', JSON.stringify(res));
         // console.log(res.token);
@@ -264,26 +257,45 @@ function App() {
       })
   }
 
+ 
+ useEffect(() => {
+   if (isLoading) {
+    setData();
+   }
+
+ }, [isLoggedIn])
+
+
   function setData() {
+   // setIsLoading(true);
     const jwt = localStorage.getItem("jwt");
     const profileInfo = mainApi.getUserInfo(jwt);
     const movies = moviesApi.getInitialCards();
     const favoriteMovies = mainApi.getMovies(jwt);
-    Promise.all([profileInfo, movies, favoriteMovies])
+    console.log('setdata отработал')
+    Promise.all([profileInfo, movies, mainApi.getMovies(jwt)])
       .then((res) => {
-        setCurrentUser(res);
-        setMoviesList(res);
-        setFavoriteList(res[2].data);
-
-        localStorage.setItem('currentUser', JSON.stringify(res));
-        localStorage.setItem('movies', JSON.stringify(res));
-        localStorage.setItem('savedMovies', JSON.stringify(res[2].data));
-
+        console.log('промис отработал')
+        console.log(res.data)
+        setCurrentUser(res[0].data);
+        setMoviesList(res[1].data);
+        
+        const isLiked = res.data.filter((movie) => movie.owner === currentUser._id);
+  
+        setFavoriteList(isLiked);
+        setFavoriteListForRender(isLiked);
+        
+        
+        localStorage.setItem('currentUser', JSON.stringify(res[0].data));
+        localStorage.setItem('movies', JSON.stringify(res[1].data));
+        localStorage.setItem('savedMovies', JSON.stringify(isLiked));
+      //  setIsLoading(false);
       }).catch((err) => {
         console.log(`Внимание! ${err}`);
       })
   };
 
+  console.log(favoriteList)
 
   // удаление токена при выходе
   function signOut() {
@@ -296,7 +308,7 @@ function App() {
     setIsLoggedIn(false);
   }
 
-  console.log(currentUser)
+//  console.log(currentUser)
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

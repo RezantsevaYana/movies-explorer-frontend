@@ -3,6 +3,7 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import SearchForm from "../SearchForm/SearchForm";
 import Footer from '../Footer/Footer';
 import { useLocation } from 'react-router';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 
 
