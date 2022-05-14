@@ -68,7 +68,7 @@ function MoviesCardList({
       }
       {pathname === '/movies' && moviesList.length === 0 ? (
         <p className='error-message'>{message}</p>
-      ) : pathname === '/saved-movies' && favoriteList.length === 0 ? (
+      ) : pathname === '/saved-movies' && favoriteListForRender.length === 0 ? (
         <p className='error-message'>{message}</p>
       ) : (
         ''

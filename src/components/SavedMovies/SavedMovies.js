@@ -19,6 +19,10 @@ function SavedMovies({
     setIsLoading,
     favoriteList,
     setFavoriteList,
+    favoriteListForRender,
+    setFavoriteListForRender,
+    shortList,
+    setShortList,
  }) {
 
 
@@ -28,13 +32,10 @@ function SavedMovies({
 
     // стейт-переменная состояния тумблера
     const [checked, setChecked] = useState(false);
-    const [shortList, setShortList] = useState([])
-    const [message, setMessage] = React.useState('')
+    const [message, setMessage] = React.useState('');
 
 
-    const [favoriteListForRender, setFavoriteListForRender] = React.useState([])
 
- 
     // фильтрация через строку поиска
     useEffect(() => {
     //    favoriteList.length ? setMessage('') : setMessage('Ничего не найдено') 
@@ -61,7 +62,7 @@ function SavedMovies({
         if (checked && favoriteList.length) {
             const newShortList = JSON.parse(localStorage.getItem('foundSaveMovies')).filter(movie => movie.duration <= 40)
             newShortList.length ?
-                setShortList(newShortList) : setFavoriteListForRender([])
+                setShortList(newShortList) : setShortList([])
                 localStorage.setItem('foundSaveMovies', JSON.stringify(newShortList));
         } else {
             setShortList([])

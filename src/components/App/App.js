@@ -50,6 +50,8 @@ function App() {
 
   // переменная состояния для сохраненных фильмов в избранном
   const [favoriteList, setFavoriteList] = React.useState([]);
+  const [favoriteListForRender, setFavoriteListForRender] = React.useState([]);
+  const [shortList, setShortList] = React.useState([]);
 
   const [moviesList, setMoviesList] = React.useState([]);
   // переменные состояния для добавления фильмов
@@ -96,6 +98,8 @@ function App() {
     getCards()
   }, [width])
 
+  console.log(isLoggedIn)
+
   // рендер коллекции карточек
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -127,6 +131,7 @@ function App() {
 
 
 
+
   //console.log(favoriteList)
 
 
@@ -147,6 +152,7 @@ function App() {
       })
   }
 
+
   // удаление фильма
   function handleDeleteMovies(movie) {
     const jwt = localStorage.getItem("jwt");
@@ -158,7 +164,9 @@ function App() {
         console.log(res);
         if (res) {
           const arr = JSON.parse(localStorage.getItem('savedMovies')).filter((item) => item.movieId !== id);
-          setFavoriteList(arr);
+          setFavoriteList(arr)
+          setFavoriteListForRender(arr);
+       //   setShortList(arr)
           localStorage.setItem('savedMovies', JSON.stringify(arr));
         }
       })
@@ -189,24 +197,28 @@ function App() {
 
   // проверка токенов авторизованных пользователей, вернувшихся в приложение
   useEffect(() => {
-    console.log('useEffect в App отработал')
+    console.log('useEffect в App отработал');
+    checkToken();
+  }, [navigate]);
+
+  function checkToken() {
     const jwt = localStorage.getItem("jwt");
-    if (localStorage.jwt) {
+    if (jwt) {
       setIsLoggedIn(true);
       mainApi.getUserInfo(jwt)
-      .then((profile) => {
-        setIsLoggedIn(true);
-        console.log(profile)
-        setCurrentUser(profile);
-        localStorage.setItem('currentUser', JSON.stringify(profile))
-        navigate(routes.pathname);
-      })
-      .catch((err) => {
-        navigate('/signin');
-        console.log(`Внимание! ${err}`);
-      })
+        .then((profile) => {
+          setIsLoggedIn(true);
+          console.log(profile)
+          setCurrentUser(profile);
+          localStorage.setItem('currentUser', JSON.stringify(profile))
+          navigate(routes.pathname);
+        })
+        .catch((err) => {
+          navigate('/signin');
+          console.log(`Внимание! ${err}`);
+        })
     }
-  }, []);
+  }
 
 
   // регистрация
@@ -234,8 +246,8 @@ function App() {
     mainApi.login({ email, password })
       .then((res) => {
         navigate('/movies');
-        localStorage.setItem("jwt", res.token);
         setData();
+        localStorage.setItem("jwt", res.token);
         localStorage.setItem('currentUser', JSON.stringify(res));
         // console.log(res.token);
         localStorage.setItem('isLoggedIn', true)
@@ -273,9 +285,9 @@ function App() {
   };
 
 
-
   // удаление токена при выходе
   function signOut() {
+    console.log('signOut в App отработал')
     localStorage.clear();
     navigate("/");
     //setFavoriteList([]);
@@ -284,7 +296,7 @@ function App() {
     setIsLoggedIn(false);
   }
 
-
+  console.log(currentUser)
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -295,64 +307,67 @@ function App() {
 
         {<Routes>
           <Route path='/movies' element={
-
-              <ProtectedRoute
-                isLoggedIn={isLoggedIn}
-                component={Movies}
-                onHeaderOpen={onHeaderOpen}
-                handleSaveMovies={handleSaveMovies}
-                handleDeleteMovies={handleDeleteMovies}
-                favoriteList={favoriteList}
-                moviesList={moviesList}
-                setMoviesList={setMoviesList}
-                moviesCount={moviesCount}
-                setMoviesCount={setMoviesCount}
-                addMovies={addMovies}
-                setAddMovies={setAddMovies}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-              ></ProtectedRoute>
+            <ProtectedRoute
+              isLoggedIn={isLoggedIn}
+              component={Movies}
+              onHeaderOpen={onHeaderOpen}
+              handleSaveMovies={handleSaveMovies}
+              handleDeleteMovies={handleDeleteMovies}
+              favoriteList={favoriteList}
+              moviesList={moviesList}
+              setMoviesList={setMoviesList}
+              moviesCount={moviesCount}
+              setMoviesCount={setMoviesCount}
+              addMovies={addMovies}
+              setAddMovies={setAddMovies}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            ></ProtectedRoute>
           } ></Route>
           <Route path="/" element={
-        
-              <Main />
- 
+
+            <Main />
+
           } />
           <Route path="/saved-movies" element={
-           
-              <ProtectedRoute
-                component={SavedMovies}
-                isLoggedIn={isLoggedIn}
-                onHeaderOpen={onHeaderOpen}
-                favoriteList={favoriteList}
-                setFavoriteList={setFavoriteList}
-                handleDeleteMovies={handleDeleteMovies}
-                handleSaveMovies={handleSaveMovies}
-                moviesList={moviesList}
-                setMoviesList={setMoviesList}
-                moviesCount={moviesCount}
-                setMoviesCount={setMoviesCount}
-                addMovies={addMovies}
-                setAddMovies={setAddMovies}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-              >
-              </ProtectedRoute>
-           
+
+            <ProtectedRoute
+              component={SavedMovies}
+              isLoggedIn={isLoggedIn}
+              onHeaderOpen={onHeaderOpen}
+              favoriteList={favoriteList}
+              setFavoriteList={setFavoriteList}
+              favoriteListForRender={favoriteListForRender}
+              setFavoriteListForRender={setFavoriteListForRender}
+              shortList={shortList}
+              setShortList={setShortList}
+              handleDeleteMovies={handleDeleteMovies}
+              handleSaveMovies={handleSaveMovies}
+              moviesList={moviesList}
+              setMoviesList={setMoviesList}
+              moviesCount={moviesCount}
+              setMoviesCount={setMoviesCount}
+              addMovies={addMovies}
+              setAddMovies={setAddMovies}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            >
+            </ProtectedRoute>
+
           } />
           <Route path="/profile" element={
-          
-              <ProtectedRoute
-                component={Profile}
-                isLoggedIn={isLoggedIn}
-                signOut={signOut}
-                onUpdateUser={handleUpdateUser}
-                changeError={changeError}
-              >
-              </ProtectedRoute>
-      
+
+            <ProtectedRoute
+              component={Profile}
+              isLoggedIn={isLoggedIn}
+              signOut={signOut}
+              onUpdateUser={handleUpdateUser}
+              changeError={changeError}
+            >
+            </ProtectedRoute>
+
           } />
           <Route path="/signin"
             element={<ProtectedRoute
@@ -390,6 +405,21 @@ function App() {
 }
 
 export default App;
+
+
+/*
+1. После выхода из приложение стейт в апп показывает фалс, но в продект роут прокидывается тру
+2. После авторизации в приложении первоначальный рендер коллекции карточек выдает ошибку, после обновления все начинает работать
+3. В профайл приходит информация только после обновления (решено, но зациклена переадресация)
+3. Как сделать так, чтобы за конкретным пользователем закреплялись конкретнные сохраненные фильмы
+4. После обновления страницы все слетает, лайки и сохраненные фильмы должны оставаться
+5. после входа попадаем на страницу главную, хотя направление стоит на фильмы
+
+основные проблемы:
+1 циклический редирект
+2 стейт логина в продект роут идет тру, даже если в апп он фолс
+3 как за конкретным пользователем сохранить его фильмы, чтобы при новом заходе все оставалось
+*/
 
 
 
