@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormValidation } from "../../utils/formValidation.js";
 
-function Login({ onLogin, loginError }) {
+function Login({ onLogin, loginError, isLoading }) {
     const { values, handleChange, errors, isValid, resetForm } = useFormValidation();
+  //  const [disabled, setDisabled] = useState(false)
 
     function handleSubmit(evt) {
         evt.preventDefault();
-        onLogin({ email: values.email, password: values.password });
+        onLogin({ email: values.email, password: values.password })
         resetForm();
     }
 
@@ -34,6 +35,7 @@ function Login({ onLogin, loginError }) {
                         value={values.email || ""}
                         onChange={handleInputChange}
                         pattern='^[^@\s]+@[^@\s]+\.[^@\s]+$'
+                        disabled={isLoading}
                         >
                         </input>
                     <span className="error sign__input-error">{errors.email}</span>
@@ -42,7 +44,8 @@ function Login({ onLogin, loginError }) {
                     <label className="sign__label">Пароль</label>
                     <input className="sign__input" type="password" name="password" required minLength="2" maxLength="30"
                         value={values.password || ""}
-                        onChange={handleInputChange}></input>
+                        onChange={handleInputChange}
+                        disabled={isLoading}></input>
                     <span className="error sign__input-error">{errors.password}</span>
                 </div>
                 <div className="sign__buttons">

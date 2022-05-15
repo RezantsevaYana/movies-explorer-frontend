@@ -35,11 +35,9 @@ function SavedMovies({
     const [checked, setChecked] = useState(false);
     const [message, setMessage] = React.useState('');
 
-
-
+ 
     // фильтрация через строку поиска
     useEffect(() => {
-    //    favoriteList.length ? setMessage('') : setMessage('Ничего не найдено') 
         const filterMovies = favoriteList.filter((movie) =>
             movie.nameRU.toLowerCase().indexOf(value.toLowerCase()) > -1)
         if (filterMovies.length) {
@@ -51,8 +49,6 @@ function SavedMovies({
         }
     }, [value])
 
-    console.log(checked)
-    //console.log(checkBoxStatus)
 
     function handleSubmitSearchForm(value) {
         setValue(value);

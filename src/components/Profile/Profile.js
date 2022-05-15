@@ -43,7 +43,8 @@ function Profile(props) {
                             maxLength="30"
                             placeholder={currentUser.name}
                             value={values.name || ""}
-                            onChange={handleInputChange}>
+                            onChange={handleInputChange}
+                            disabled={props.isLoading}>
                         </input>
                     </label>
                     <div className="profile__line"></div>
@@ -58,6 +59,7 @@ function Profile(props) {
                             placeholder={currentUser.email}
                             value={values.email || ""}
                             pattern='^[^@\s]+@[^@\s]+\.[^@\s]+$'
+                            disabled={props.isLoading}
                             onChange={handleInputChange}>
                         </input>
                     </label>

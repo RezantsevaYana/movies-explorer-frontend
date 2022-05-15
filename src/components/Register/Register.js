@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useFormValidation } from "../../utils/formValidation.js";
 
-function Register({ onRegister, registerError, setRegisterError }) {
+function Register({ onRegister, registerError, setRegisterError, isLoading }) {
     const { values, handleChange, errors, isValid, resetForm } = useFormValidation();
 
     // обработчики изменения инпутов
@@ -35,6 +35,7 @@ function Register({ onRegister, registerError, setRegisterError }) {
                         value={values.name || ""}
                         onChange={handleInputChange}
                         pattern='^[A-Za-zА-Яа-яЁё\s\-]{2,30}$'
+                        disabled={isLoading}
                     ></input>
                     <span className="error sign__input-error">{errors.name}</span>
                 </div>
@@ -49,6 +50,7 @@ function Register({ onRegister, registerError, setRegisterError }) {
                         value={values.email || ""}
                         onChange={handleInputChange}
                         pattern='^[^@\s]+@[^@\s]+\.[^@\s]+$'
+                        disabled={isLoading}
                         ></input>
                     <span className="error sign__input-error">{errors.email}</span>
                 </div>
@@ -56,7 +58,8 @@ function Register({ onRegister, registerError, setRegisterError }) {
                     <label className="sign__label">Пароль</label>
                     <input className="sign__input" type="password" name="password" required minLength="2" maxLength="30"
                         value={values.password || ""}
-                        onChange={handleInputChange}></input>
+                        onChange={handleInputChange}
+                        disabled={isLoading}></input>
                     <span className="error sign__input-error">{errors.password}</span>
                 </div>
                 <div className="sign__buttons sign__buttons_register">

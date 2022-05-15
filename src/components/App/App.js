@@ -19,6 +19,7 @@ import Navigation from '../Navigation/Navigation.js';
 import SigninButton from '../SigninButton/SigninButton.js';
 import ScreenSize from '../../hooks/ScreenSize.js';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute.js';
+import UserBlockedRoute from '../UserBlockedRoute/UserBlockedRoute.js';
 
 function App() {
   const routes = useLocation();
@@ -37,13 +38,12 @@ function App() {
 
   // стэйт переменные регистрации и авторизации
   const [isLoggedIn, setIsLoggedIn] = React.useState(!!localStorage.getItem('isLoggedIn'));
-  const [isUserCheck, setIsUserCheck] = React.useState(false);
 
   const [registerError, setRegisterError] = React.useState("");
   const [loginError, setLoginError] = React.useState("");
   const [changeError, setChangeError] = React.useState("");
 
-  // переменные состояния для попапов результата регистрации (не реализовано, оставлено напоследок)
+  // переменные состояния для попапов результата регистрации
   const [image, setImage] = React.useState("");
   const [title, setTitle] = React.useState("");
   const [isInfoTooLtip, setIsInfoTooLtip] = React.useState(false);
@@ -84,13 +84,13 @@ function App() {
   // добавление карточек в зависимости от ширины экрана
   useEffect(() => {
     function getCards() {
-      if (width >= 1280) {
+      if (width >= 1136) {
         setMoviesCount(12);
         setAddMovies(3);
-      } else if (width < 1279 && width >= 767) {
+      } else if (width < 1136 && width >= 671) {
         setMoviesCount(8);
         setAddMovies(2);
-      } else if (width <= 766) {
+      } else if (width <= 671) {
         setMoviesCount(5);
         setAddMovies(1);
       }
@@ -98,10 +98,8 @@ function App() {
     getCards()
   }, [width])
 
-  console.log(isLoggedIn)
-
-
   useEffect(() => {
+
     setIsLoading(true);
     // рендер первоначальной коллекции фильмов
     moviesApi.getInitialCards()
@@ -113,7 +111,8 @@ function App() {
         console.log(`Внимание! ${err}`);
       });
 
- 
+
+
     // рендер сохраненных фильмов
     if (localStorage.getItem('savedMovies')) {
       setFavoriteList(JSON.parse(localStorage.getItem('savedMovies')));
@@ -124,10 +123,6 @@ function App() {
     }
 
   }, [])
-
-
-
-  //console.log(favoriteList)
 
 
   // сохранение фильма
@@ -144,6 +139,9 @@ function App() {
       })
       .catch((err) => {
         console.log(`Внимание! ${err}`);
+        setTitle("Что-то пошло не так! Попробуйте ещё раз.");
+        setImage(notRegister);
+        handleInfoTooLtip();
       })
   }
 
@@ -166,6 +164,9 @@ function App() {
       })
       .catch((err) => {
         console.log(`Внимание! ${err}`);
+        setTitle("Что-то пошло не так! Попробуйте ещё раз.");
+        setImage(notRegister);
+        handleInfoTooLtip();
       })
   }
 
@@ -173,6 +174,7 @@ function App() {
   // изменение инорфмации о пользователе
   function handleUpdateUser({ name, email }) {
     const jwt = localStorage.getItem("jwt");
+    setIsLoading(true);
     mainApi.updateUser({ jwt, name, email })
       .then((user) => {
         setTitle("Данные успешно изменены!");
@@ -180,17 +182,19 @@ function App() {
         if (user._id) {
           setCurrentUser(user);
         }
+        setIsLoading(false);
       }).catch((err) => {
         console.log(`Внимание! ${err}`);
         setTitle("Что-то пошло не так! Попробуйте ещё раз.");
         setImage(notRegister);
-      }).finally(handleInfoTooLtip)
+        setIsLoading(false);
+      }).finally(
+        handleInfoTooLtip)
   }
 
 
   // проверка токенов авторизованных пользователей, вернувшихся в приложение
   useEffect(() => {
-    console.log('useEffect в App отработал');
     checkToken();
   }, [navigate]);
 
@@ -201,10 +205,8 @@ function App() {
       mainApi.getUserInfo(jwt)
         .then((profile) => {
           setIsLoggedIn(true);
-          console.log(profile)
           setCurrentUser(profile);
           localStorage.setItem('currentUser', JSON.stringify(profile))
-          navigate(routes.pathname);
         })
         .catch((err) => {
           navigate('/signin');
@@ -216,6 +218,7 @@ function App() {
 
   // регистрация
   function onRegister({ email, password, name }) {
+    setIsLoading(true);
     mainApi.register({ email, password, name })
       .then((data) => {
         onLogin({ email, password });
@@ -223,12 +226,14 @@ function App() {
         setTitle("Вы успешно зарегистрировались!");
         setImage(register);
         setIsLoggedIn(true);
+        setIsLoading(false);
       }).catch((err) => {
         console.log(`Внимание! ${err}`);
         setTitle("Что-то пошло не так! Попробуйте ещё раз.");
         setImage(notRegister);
         if (err === 400) return setRegisterError('Некорректно заполнено одно из полей');
         setRegisterError('Что-то пошло не так, попробуйте еще раз!')
+        setIsLoading(false);
       }).finally(handleInfoTooLtip)
   }
 
@@ -238,13 +243,10 @@ function App() {
   function onLogin({ email, password }) {
     mainApi.login({ email, password })
       .then((res) => {
-        navigate('/movies');
-     //   setData();
         localStorage.setItem("jwt", res.token);
-        localStorage.setItem('currentUser', JSON.stringify(res));
-        // console.log(res.token);
-        localStorage.setItem('isLoggedIn', true)
-        setIsLoggedIn(true);
+        setData(() => {
+          navigate('/movies');
+        });
         return res;
       })
       .catch((err) => {
@@ -257,58 +259,48 @@ function App() {
       })
   }
 
- 
- useEffect(() => {
-   if (isLoading) {
-    setData();
-   }
 
- }, [isLoggedIn])
-
-
-  function setData() {
-   // setIsLoading(true);
+  const setData = (callback) => {
+    setIsLoading(true);
     const jwt = localStorage.getItem("jwt");
-    const profileInfo = mainApi.getUserInfo(jwt);
-    const movies = moviesApi.getInitialCards();
-    const favoriteMovies = mainApi.getMovies(jwt);
-    console.log('setdata отработал')
-    Promise.all([profileInfo, movies, mainApi.getMovies(jwt)])
-      .then((res) => {
-        console.log('промис отработал')
-        console.log(res.data)
-        setCurrentUser(res[0].data);
-        setMoviesList(res[1].data);
-        
-        const isLiked = res.data.filter((movie) => movie.owner === currentUser._id);
-  
-        setFavoriteList(isLiked);
-        setFavoriteListForRender(isLiked);
-        
-        
-        localStorage.setItem('currentUser', JSON.stringify(res[0].data));
-        localStorage.setItem('movies', JSON.stringify(res[1].data));
-        localStorage.setItem('savedMovies', JSON.stringify(isLiked));
-      //  setIsLoading(false);
-      }).catch((err) => {
-        console.log(`Внимание! ${err}`);
-      })
-  };
 
-  console.log(favoriteList)
+    Promise.all([
+      mainApi.getUserInfo(jwt),
+      moviesApi.getInitialCards(),
+      mainApi.getMovies(jwt)
+    ]).then(([profile, movies, favorites]) => {
+
+      setCurrentUser(profile);
+      setMoviesList(movies);
+
+      const favoritesForCurrentUser = favorites.data.filter((movie) => movie.owner === profile._id);
+
+      setFavoriteList(favoritesForCurrentUser);
+      setFavoriteListForRender(favoritesForCurrentUser);
+      setIsLoggedIn(true);
+
+      localStorage.setItem('currentUser', JSON.stringify(profile));
+      localStorage.setItem('movies', JSON.stringify(movies));
+      localStorage.setItem('savedMovies', JSON.stringify(favoritesForCurrentUser));
+      localStorage.setItem('isLoggedIn', true);
+
+      if (callback) {
+        callback();
+      }
+
+      setIsLoading(false);
+    }).catch((err) => {
+      console.log(`Внимание! ${err}`);
+    })
+  };
 
   // удаление токена при выходе
   function signOut() {
-    console.log('signOut в App отработал')
     localStorage.clear();
     navigate("/");
-    //setFavoriteList([]);
-    //  setMoviesList([]);
     setCurrentUser([]);
     setIsLoggedIn(false);
   }
-
-//  console.log(currentUser)
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -337,9 +329,7 @@ function App() {
             ></ProtectedRoute>
           } ></Route>
           <Route path="/" element={
-
             <Main />
-
           } />
           <Route path="/saved-movies" element={
 
@@ -363,39 +353,39 @@ function App() {
               setAddMovies={setAddMovies}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
             >
             </ProtectedRoute>
 
           } />
           <Route path="/profile" element={
-
             <ProtectedRoute
               component={Profile}
               isLoggedIn={isLoggedIn}
               signOut={signOut}
               onUpdateUser={handleUpdateUser}
               changeError={changeError}
+              isLoading={isLoading}
             >
             </ProtectedRoute>
-
           } />
           <Route path="/signin"
-            element={<ProtectedRoute
+            element={<UserBlockedRoute
               component={Login}
-              isLoggedIn={!isLoggedIn}
+              isLoggedIn={isLoggedIn}
               onLogin={onLogin}
               loginError={loginError}
-            ></ProtectedRoute>} />
+              isLoading={isLoading}
+              setIsLoggedIn={setIsLoggedIn}
+            ></UserBlockedRoute>} />
           <Route path="/signup" element={
-            <ProtectedRoute
+            <UserBlockedRoute
               component={Register}
-              isLoggedIn={!isLoggedIn}
+              isLoggedIn={isLoggedIn}
               onRegister={onRegister}
               registerError={registerError}
-              setRegisterError={setRegisterError}>
-            </ProtectedRoute>
+              setRegisterError={setRegisterError}
+              isLoading={isLoading}>
+            </UserBlockedRoute>
           } />
           <Route path="*" element={
             <NotFound />
@@ -417,21 +407,3 @@ function App() {
 }
 
 export default App;
-
-
-/*
-1. После выхода из приложение стейт в апп показывает фалс, но в продект роут прокидывается тру
-2. После авторизации в приложении первоначальный рендер коллекции карточек выдает ошибку, после обновления все начинает работать
-3. В профайл приходит информация только после обновления (решено, но зациклена переадресация)
-3. Как сделать так, чтобы за конкретным пользователем закреплялись конкретнные сохраненные фильмы
-4. После обновления страницы все слетает, лайки и сохраненные фильмы должны оставаться
-5. после входа попадаем на страницу главную, хотя направление стоит на фильмы
-
-основные проблемы:
-1 циклический редирект
-2 стейт логина в продект роут идет тру, даже если в апп он фолс
-3 как за конкретным пользователем сохранить его фильмы, чтобы при новом заходе все оставалось
-*/
-
-
-
