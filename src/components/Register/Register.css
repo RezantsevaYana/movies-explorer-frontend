@@ -3,3 +3,9 @@
         margin-top: 157px;
     }
 }
+
+.sign__button_invalid {
+    border: none;
+    background: #F8F8F8;
+    color: #C2C2C2;
+}

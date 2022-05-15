@@ -1,8 +1,5 @@
 import React, { Children } from "react";
-import { Link, NavLink } from "react-router-dom";
-import Navigation from "../Navigation/Navigation";
-import SigninButton from "../SigninButton/SigninButton";
-
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 function Header(props) {
     return (
@@ -16,5 +13,3 @@ function Header(props) {
 }
 
 export default Header;
-
-// <MobileHeader></MobileHeader>

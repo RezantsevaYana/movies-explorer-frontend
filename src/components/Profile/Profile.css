@@ -1,11 +1,16 @@
 .profile {
     width: 100%;
+    margin: 0 auto;
+}
+
+.profile__container{
+    width: 410px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 74px;
     padding-bottom: 70px;
-    justify-content: flex-start;
 }
 
 .profile__name {
@@ -14,12 +19,13 @@
     font-size: 24px;
     line-height: 29px;
     text-align: center;
-    margin: 0;
+    margin: 0 0 123px;
 }
 
 .profile__links {
     width: 410px;
     height: 48px;
+    margin-top: 200px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -38,9 +44,25 @@
     text-decoration: none;
 }
 
-.profile__link:last-of-type {
+.profile__button {
+    border: none;
+    background-color: white;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
     color: #FF4062;
 }
+
+.profile__button:hover {
+    cursor: pointer;
+    transition-duration: .3s;
+    opacity: 0.6;
+}
+
+.profile__link_invalid {
+    color: grey;
+}
+
 
 .profile__link:hover {
     cursor: pointer;
@@ -49,39 +71,41 @@
 }
 
 .profile__form {
-    width: 410px;
-    height: 62px;
-    margin: 123px auto 220px;
-}
-
-.profile__item {
-    height: 30px;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.profile__item:last-of-type {
-    border-top: 1px #E8E8E8 solid;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: center;
 }
 
 .profile__label {
-    width: 141px;
-    font-style: normal;
-    font-weight: 500;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: black;
     font-size: 11px;
     line-height: 13px;
+    font-weight: 500
 }
 
 .profile__input {
-    border: none;
-    width: 122px;
+    height: 32px;
+    width: 90%;
+    color: black;
     font-size: 11px;
     line-height: 13px;
-    text-align: right;
-    color: black;
+    font-weight: 400;
+    background-color: transparent;
+    padding: 0;
+    border: 0;
     outline: none;
+    text-align: right;
+}
+
+.profile__line {
+    width: 100%;
+    border-bottom: 1px solid #E8E8E8;
+    margin: 16px auto 17px;
 }
 
 @media screen and (max-width:768px) {

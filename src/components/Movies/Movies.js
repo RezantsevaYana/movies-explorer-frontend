@@ -1,82 +1,98 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import SearchForm from "../SearchForm/SearchForm";
-import AnotherButton from "../AnotherButton/AnotherButton";
 import Footer from "../Footer/Footer";
-import Header from "../Header/Header";
-import Navigation from "../Navigation/Navigation";
-import MoviesCard from "../MoviesCard/MoviesCard";
-import film1 from "../../images/film1.jpg";
-import film2 from "../../images/film2.jpg"
-import film3 from "../../images/film3.jpg";
-import film4 from "../../images/film4.jpg";
-import film5 from "../../images/film5.jpg";
-import film6 from "../../images/film6.jpg";
-import film7 from "../../images/film7.jpg";
-import film8 from "../../images/film8.jpg";
-import film9 from "../../images/film9.jpg";
-import film10 from "../../images/film10.jpg";
-import film11 from "../../images/film11.jpg";
-import film12 from "../../images/film12.jpg";
+import { useLocation } from 'react-router';
 
-function Movies({onHeaderOpen}) {
+function Movies({ onHeaderOpen,
+    handleSaveMovies,
+    handleDeleteMovies,
+    moviesList,
+    setMoviesList,
+    favoriteList,
+    moviesCount,
+    setMoviesCount,
+    addMovies,
+    setAddMovies,
+    isLoading,
+    setIsLoading }) {
+    const routes = useLocation();
+
+    const [message, setMessage] = React.useState('')
+
+    const valueData = localStorage.getItem('value');
+    const [value, setValue] = React.useState(valueData && routes.pathname === '/movies' ? valueData : '');
+
+    // стейт-переменная состояния тумблера
+    const checkBoxStatus = JSON.parse(localStorage.getItem('checkBoxStatus'));
+
+    const [checked, setChecked] = useState(false);
+    const [shortList, setShortList] = useState([]);
+
+ 
+    // фильтрация массива через поиск по ключевому слову
+    useEffect(() => {
+        const filterMovies = JSON.parse(sessionStorage.getItem('movies')).filter((movie) =>
+            movie.nameRU.toLowerCase().indexOf(value.toLowerCase()) > -1)
+        if (filterMovies.length) {
+            setMoviesList(filterMovies);
+            localStorage.setItem('foundMovies', JSON.stringify(filterMovies));
+        } else {
+            setMoviesList([]);
+            setMessage('Ничего не найдено');
+        }
+    }, [value])
+
+
+    function handleSubmitSearchForm(value) {
+        setValue(value);
+    }
+
+
+    // фильтрация массива через установку тумблера (продолжительность фильма)
+    useEffect(() => {
+        if (checkBoxStatus) {
+            const newShortList = JSON.parse(localStorage.getItem('foundMovies')).filter(movie => movie.duration <= 40)
+            setShortList(newShortList);
+            localStorage.setItem('foundMovies', JSON.stringify(newShortList));
+        } else {
+            setShortList([]);
+            setMessage('Ничего не найдено');
+        }
+    }, [checkBoxStatus])
+
+
+    function handleCheckboxChange(isCheckboxOn) {
+        setChecked(isCheckboxOn);
+    }
+
+
     return (
         <section className="movies">
-            <Header>
-                <Navigation onHeaderOpen={onHeaderOpen}></Navigation>
-            </Header>
-            <SearchForm></SearchForm>
-            <MoviesCardList>
-                <MoviesCard film={film1}>
-                    <button className="movies-card__button movies-card__button_save movies-card__button_save_active" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film2}>
-                    <button className="movies-card__button movies-card__button_save" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film3}>
-                    <button className="movies-card__button movies-card__button_save" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film4}>
-                    <button className="movies-card__button movies-card__button_save" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film5}>
-                    <button className="movies-card__button movies-card__button_save movies-card__button_save_active" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film6}>
-                    <button className="movies-card__button movies-card__button_save" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film7}>
-                    <button className="movies-card__button movies-card__button_save" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film8}>
-                    <button className="movies-card__button movies-card__button_save movies-card__button_save_active" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film9}>
-                    <button className="movies-card__button movies-card__button_save" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film10}>
-                    <button className="movies-card__button movies-card__button_save" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film11}>
-                    <button className="movies-card__button movies-card__button_save" type="button">
-                    </button>
-                </MoviesCard>
-                <MoviesCard film={film12}>
-                    <button className="movies-card__button movies-card__button_save" type="button">
-                    </button>
-                </MoviesCard>
-            </MoviesCardList>
-            <AnotherButton></AnotherButton>
+            <SearchForm setMoviesCount={setMoviesCount}
+                setMoviesList={setMoviesList}
+                handleSubmitSearchForm={handleSubmitSearchForm}
+                handleCheckboxChange={handleCheckboxChange}
+                checkBoxStatus={checkBoxStatus}
+                checked={checked}
+                setChecked={setChecked}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+            >
+            </SearchForm>
+            <MoviesCardList
+                setMoviesCount={setMoviesCount}
+                moviesCount={moviesCount}
+                moviesList={checkBoxStatus ? shortList : moviesList}
+                handleSaveMovies={handleSaveMovies}
+                handleDeleteMovies={handleDeleteMovies}
+                favoriteList={favoriteList}
+                addMovies={addMovies}
+                setAddMovies={setAddMovies}
+                message={message}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+            />
             <Footer></Footer>
         </section>
 

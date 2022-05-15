@@ -1,43 +1,82 @@
 import React from "react";
-import{ Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useFormValidation } from "../../utils/formValidation.js";
 
-function Register(props) {
+function Register({ onRegister, registerError, setRegisterError, isLoading }) {
+    const { values, handleChange, errors, isValid, resetForm } = useFormValidation();
+
+    // обработчики изменения инпутов
+    function handleInputChange(evt) {
+        handleChange(evt);
+    }
+
+    function handleSubmit(evt) {
+        evt.preventDefault();
+        onRegister({ email: values.email, name: values.name, password: values.password });
+        resetForm();
+    }
+
+
     return (
-       <section className="login">
-           <div className="sign__header">
-              <Link to="/"><div className="header__logo header__logo_sign"></div></Link>
-               <h2 className="sign__title">{props.title}</h2>
-           </div>
-           <form className="sign__form">
+        <section className="login">
+            <div className="sign__header">
+                <Link to="/"><div className="header__logo header__logo_sign"></div></Link>
+                <h2 className="sign__title">Добро пожаловать!</h2>
+            </div>
+            <form className="sign__form" onSubmit={handleSubmit}>
                 <div className="sign__item">
-                   <label className="sign__label">Имя</label>
-                   <input className="sign__input" type="name" required minlength="2" maxlength="30"></input>
-                   <span className="error sign__input-error"></span>
-               </div>
-               <div className="sign__item">
-                   <label className="sign__label">E-mail</label>
-                   <input className="sign__input" type="email" required minlength="2" maxlength="30"></input>
-                   <span className="error sign__input-error"></span>
-               </div>
-               <div className="sign__item">
-                   <label className="sign__label">Пароль</label>
-                   <input className="sign__input" type="password" required minlength="2" maxlength="30"></input>
-                   <span className="error sign__input-error"></span>
-               </div>
-               <div className="sign__buttons sign__buttons_register">
-                <button className="sign__button" type="submit">
-                    Зарегистрироваться
-                </button>
-                <p className="sign__subtitle">
-                    Уже зарегистрированы?{" "}
-                    <Link to="/signin" className="sign__link">
-                        Войти
-                    </Link>
-                </p>
+                    <label className="sign__label">Имя</label>
+                    <input className="sign__input"
+                        type="name"
+                        name="name"
+                        required
+                        minLength="2"
+                        maxLength="30"
+                        value={values.name || ""}
+                        onChange={handleInputChange}
+                        pattern='^[A-Za-zА-Яа-яЁё\s\-]{2,30}$'
+                        disabled={isLoading}
+                    ></input>
+                    <span className="error sign__input-error">{errors.name}</span>
                 </div>
-           </form>
+                <div className="sign__item">
+                    <label className="sign__label">E-mail</label>
+                    <input className="sign__input"
+                        type="email"
+                        name="email"
+                        required
+                        minLength="2"
+                        maxLength="30"
+                        value={values.email || ""}
+                        onChange={handleInputChange}
+                        pattern='^[^@\s]+@[^@\s]+\.[^@\s]+$'
+                        disabled={isLoading}
+                        ></input>
+                    <span className="error sign__input-error">{errors.email}</span>
+                </div>
+                <div className="sign__item">
+                    <label className="sign__label">Пароль</label>
+                    <input className="sign__input" type="password" name="password" required minLength="2" maxLength="30"
+                        value={values.password || ""}
+                        onChange={handleInputChange}
+                        disabled={isLoading}></input>
+                    <span className="error sign__input-error">{errors.password}</span>
+                </div>
+                <div className="sign__buttons sign__buttons_register">
+                    <span className="error-message">{registerError}</span>
+                    <button className={isValid ? "sign__button" : "sign__button sign__button_invalid"} type="submit" disabled={!isValid}>
+                        Зарегистрироваться
+                    </button>
+                    <p className="sign__subtitle">
+                        Уже зарегистрированы?{" "}
+                        <Link to="/signin" className="sign__link">
+                            Войти
+                        </Link>
+                    </p>
+                </div>
+            </form>
 
-       </section>
+        </section>
 
     );
 }

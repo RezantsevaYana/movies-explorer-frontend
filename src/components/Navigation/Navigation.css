@@ -44,8 +44,7 @@
 
 
 .header__movies {
-    margin-right: 18px; 
-    font-weight: 500;
+    margin-right: 18px;
     font-size: 13px;
     line-height: 18px;
     text-decoration: none;
@@ -70,6 +69,10 @@
     cursor: pointer;
     transition-duration: .3s;
     opacity: 0.6;
+}
+
+.header__movies_active {
+    font-weight: 500;
 }
 
 .mobile-header__button {
